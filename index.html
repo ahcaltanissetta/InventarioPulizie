@@ -1332,21 +1332,17 @@ async function updateMovement(movementId, type, quantity, reason, note) {
         
         // Cerca il movimento PER ID NUMERICO
         var movement = movements.find(function(m) { 
-            return m.id === parseInt(movementId) || String(m.id) === String(movementId);
+            return m.id === parseInt(movementId);
         });
         
         if (!movement) {
-            movement = movements.find(function(m) { 
-                return m.movement_id === movementId;
-            });
-        }
-        
-        if (!movement) {
-            alert('❌ Movimento non trovato!');
+            console.error('❌ Movimento non trovato. Movimenti disponibili:', movements);
+            alert('❌ Movimento non trovato! ID: ' + movementId);
             return false;
         }
 
         console.log('📊 Movimento trovato - ID numerico:', movement.id);
+        console.log('📊 Quantità attuale nel movimento:', movement.quantity);
 
         var product = products.find(function(p) { return p.id === movement.product_id; });
         if (!product) {
@@ -1422,7 +1418,7 @@ async function updateMovement(movementId, type, quantity, reason, note) {
         movement.reason = reason;
         movement.note = note || '';
 
-        // RICARICA I DATI DAL DATABASE
+        // FORZA IL RICARICAMENTO COMPLETO
         await loadProducts();
         await loadMovements();
         console.log('✅ Dati ricaricati. Movimenti totali:', movements.length);
@@ -1436,15 +1432,12 @@ async function updateMovement(movementId, type, quantity, reason, note) {
         closeDetailModal();
 
         // RIAVRE IL DETTAGLIO CON DATI FRESCHI
-        setTimeout(function() {
-            // Ricarica esplicitamente i movimenti
-            loadMovements().then(function() {
-                // Ricarica anche i prodotti per sicurezza
-                loadProducts().then(function() {
-                    render();
-                    openDetailModal(product.id);
-                });
-            });
+        setTimeout(async function() {
+            // Ricarica tutto prima di aprire
+            await loadProducts();
+            await loadMovements();
+            render();
+            openDetailModal(product.id);
         }, 300);
 
         return true;
@@ -1687,8 +1680,12 @@ async function deleteMovement(movementId) {
         }
 
 // ===== MODAL DETTAGLIO PRODOTTO =====
-function openDetailModal(productId) {
+async function openDetailModal(productId) {
     console.log('📂 Apertura dettaglio prodotto:', productId);
+    
+    // FORZA IL RICARICAMENTO DEI DATI DAL DATABASE
+    await loadProducts();
+    await loadMovements();
     
     var product = products.find(function(p) { return p.id === productId; });
     if (!product) {
@@ -1696,6 +1693,7 @@ function openDetailModal(productId) {
         return;
     }
 
+    // Salva l'ID del prodotto nel dataset
     document.getElementById('detailProductName').dataset.productId = productId;
     document.getElementById('detailProductName').textContent = '📦 ' + escapeHtml(product.name);
     document.getElementById('detailCategory').textContent = escapeHtml(product.category);
@@ -1713,7 +1711,7 @@ function openDetailModal(productId) {
     
     // Mostra i movimenti in console per debug
     productMovements.forEach(function(m) {
-        console.log('  - ID:', m.movement_id, '| Qty:', m.quantity, '| Tipo:', m.type);
+        console.log('  - ID:', m.id, '| movement_id:', m.movement_id, '| Qty:', m.quantity, '| Tipo:', m.type);
     });
 
     // Ordina per data (più recenti prima)
@@ -1742,6 +1740,8 @@ function openDetailModal(productId) {
                 hour: '2-digit',
                 minute: '2-digit'
             });
+            // USA L'ID NUMERICO PER IDENTIFICARE IL MOVIMENTO
+            var movementId = m.id;  // <- USA ID NUMERICO!
             return `
                     <div class="movement-item">
                         <div>
@@ -1751,14 +1751,15 @@ function openDetailModal(productId) {
                         </div>
                         <div style="display:flex;align-items:center;gap:6px;">
                             <div class="qty ${qtyClass}">${m.type === 'carico' ? '+' : '-'}${m.quantity}</div>
-                            <button class="btn btn-info btn-xs" onclick="event.stopPropagation(); openEditMovementModal('${m.movement_id}')">✏️</button>
-                            <button class="btn btn-danger btn-xs" onclick="event.stopPropagation(); deleteMovement('${m.movement_id}')">🗑️</button>
+                            <button class="btn btn-info btn-xs" onclick="event.stopPropagation(); openEditMovementModal(${movementId})">✏️</button>
+                            <button class="btn btn-danger btn-xs" onclick="event.stopPropagation(); deleteMovement(${movementId})">🗑️</button>
                         </div>
                     </div>
                 `;
         }).join('');
     }
 
+    // Mostra il modal
     document.getElementById('detailModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 }
