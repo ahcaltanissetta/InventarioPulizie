@@ -1422,18 +1422,30 @@ async function updateMovement(movementId, type, quantity, reason, note) {
         movement.reason = reason;
         movement.note = note || '';
 
-        // Ricarica e renderizza
+        // RICARICA I DATI DAL DATABASE
         await loadProducts();
         await loadMovements();
+        console.log('✅ Dati ricaricati. Movimenti totali:', movements.length);
+
+        // RENDERIZZA
         render();
         console.log('✅ Render completato');
 
-        // Chiudi e riapri
+        // CHIUDI MODALI
         closeEditMovementModal();
         closeDetailModal();
+
+        // RIAVRE IL DETTAGLIO CON DATI FRESCHI
         setTimeout(function() {
-            openDetailModal(product.id);
-        }, 400);
+            // Ricarica esplicitamente i movimenti
+            loadMovements().then(function() {
+                // Ricarica anche i prodotti per sicurezza
+                loadProducts().then(function() {
+                    render();
+                    openDetailModal(product.id);
+                });
+            });
+        }, 300);
 
         return true;
 
