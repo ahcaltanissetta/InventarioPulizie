@@ -34,7 +34,6 @@
             margin-bottom: 12px;
         }
 
-        /* LOADING */
         .loading {
             text-align: center;
             padding: 60px 20px;
@@ -52,11 +51,14 @@
             margin-bottom: 16px;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
-        /* USER INFO */
         .user-info {
             display: flex;
             justify-content: space-between;
@@ -98,7 +100,6 @@
             display: block;
         }
 
-        /* STATS */
         .stats {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -124,14 +125,7 @@
             color: #2c3e50;
             margin-top: 2px;
         }
-        .stat-card .number.green {
-            color: #27ae60;
-        }
-        .stat-card .number.red {
-            color: #e74c3c;
-        }
 
-        /* CATEGORIES */
         .category-management {
             background: white;
             border-radius: 12px;
@@ -226,7 +220,6 @@
             transform: scale(0.97);
         }
 
-        /* FORM */
         .form-section {
             background: white;
             padding: 16px;
@@ -351,14 +344,13 @@
         }
         .btn-xs {
             padding: 2px 8px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             min-width: 24px;
             min-height: 22px;
             border-radius: 4px;
             width: auto;
         }
 
-        /* MOVEMENT TOGGLE */
         .movement-toggle {
             display: flex;
             gap: 8px;
@@ -382,7 +374,6 @@
             color: #7f8c8d;
         }
 
-        /* SEARCH */
         .search-box {
             margin-bottom: 14px;
             display: flex;
@@ -422,7 +413,6 @@
             font-size: 0.8rem;
         }
 
-        /* PRODUCT LIST */
         .product-list {
             display: flex;
             flex-direction: column;
@@ -440,6 +430,7 @@
             border-left: 5px solid #3498db;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s;
         }
         .product-card:active {
             background: #f5f7fa;
@@ -551,7 +542,6 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        /* MODAL */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -587,6 +577,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .modal-header h2 {
             font-size: 1.2rem;
@@ -617,19 +609,18 @@
             padding: 12px;
         }
 
-        /* MOVEMENTS HISTORY */
         .movement-history {
             background: #f8f9fa;
             border-radius: 8px;
             padding: 12px;
-            max-height: 200px;
+            max-height: 300px;
             overflow-y: auto;
         }
         .movement-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #ecf0f1;
             font-size: 0.8rem;
         }
@@ -651,69 +642,56 @@
         .movement-item .reason {
             color: #555;
             font-size: 0.75rem;
+            margin-left: 8px;
         }
-
-        /* TABS */
-        .tabs {
+        .movement-item .qty {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .movement-item .qty.carico {
+            color: #27ae60;
+        }
+        .movement-item .qty.scarico {
+            color: #e74c3c;
+        }
+        .movement-item .actions {
             display: flex;
             gap: 4px;
-            margin-bottom: 16px;
-            background: #ecf0f1;
-            border-radius: 10px;
-            padding: 4px;
         }
-        .tabs .btn {
-            flex: 1;
-            padding: 10px;
-            font-size: 0.85rem;
-            border-radius: 8px;
+        .movement-item .actions .btn {
+            padding: 2px 6px;
+            font-size: 0.6rem;
+            min-width: 24px;
+            min-height: 22px;
+            border-radius: 4px;
             width: auto;
-            background: transparent;
-            color: #7f8c8d;
-        }
-        .tabs .btn.active {
-            background: white;
-            color: #2c3e50;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-        .tabs .btn:active {
-            transform: scale(0.97);
         }
 
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-
-        /* MOVEMENT STATS */
-        .movement-stats {
+        .movement-stats-modal {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 8px;
             margin-bottom: 12px;
         }
-        .movement-stat {
-            background: white;
+        .movement-stat-modal {
+            background: #f8f9fa;
             padding: 8px;
             border-radius: 8px;
             text-align: center;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
         }
-        .movement-stat .label {
+        .movement-stat-modal .label {
             font-size: 0.6rem;
             color: #95a5a6;
             text-transform: uppercase;
         }
-        .movement-stat .value {
+        .movement-stat-modal .value {
             font-size: 1.1rem;
             font-weight: 700;
         }
-        .movement-stat .value.green {
+        .movement-stat-modal .value.green {
             color: #27ae60;
         }
-        .movement-stat .value.red {
+        .movement-stat-modal .value.red {
             color: #e74c3c;
         }
 
@@ -779,13 +757,9 @@
             .form-row {
                 grid-template-columns: 1fr;
             }
-            .movement-stats {
+            .movement-stats-modal {
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: 4px;
-            }
-            .tabs .btn {
-                font-size: 0.75rem;
-                padding: 8px;
             }
         }
         @media (min-width: 769px) {
@@ -806,13 +780,11 @@
 
     <div class="container">
 
-        <!-- Loading -->
         <div id="loadingScreen" class="loading">
             <div class="spinner"></div>
             <p>Caricamento in corso...</p>
         </div>
 
-        <!-- APP -->
         <div class="app-content" id="appContent">
 
             <h1>🧹 Inventario Pulizie</h1>
@@ -822,7 +794,6 @@
                 <button class="btn btn-danger" onclick="handleLogout()">🚪 Esci</button>
             </div>
 
-            <!-- Stats -->
             <div class="stats" id="stats">
                 <div class="stat-card"><h3>Totale</h3><div class="number" id="totalProducts">0</div></div>
                 <div class="stat-card"><h3>Stock Basso</h3><div class="number" id="lowStock">0</div></div>
@@ -831,106 +802,63 @@
                 <div class="stat-card"><h3>Movimenti</h3><div class="number" id="totalMovements">0</div></div>
             </div>
 
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="btn active" onclick="switchTab('inventory')">📦 Inventario</button>
-                <button class="btn" onclick="switchTab('movements')">📊 Movimenti</button>
+            <div class="category-management">
+                <div class="category-management-header">
+                    <h3>📂 Gestione Categorie</h3>
+                </div>
+                <div class="category-list" id="categoryList"><span style="color:#95a5a6;">Caricamento...</span></div>
+                <div class="add-category-form">
+                    <input type="text" id="newCategoryInput" placeholder="Nuova categoria..." maxlength="30">
+                    <button class="btn btn-success" onclick="addCategory()">➕ Aggiungi</button>
+                </div>
             </div>
 
-            <!-- TAB 1: INVENTORY -->
-            <div id="tabInventory" class="tab-content active">
-
-                <!-- Categories -->
-                <div class="category-management">
-                    <div class="category-management-header">
-                        <h3>📂 Gestione Categorie</h3>
-                    </div>
-                    <div class="category-list" id="categoryList"><span style="color:#95a5a6;">Caricamento...</span></div>
-                    <div class="add-category-form">
-                        <input type="text" id="newCategoryInput" placeholder="Nuova categoria..." maxlength="30">
-                        <button class="btn btn-success" onclick="addCategory()">➕ Aggiungi</button>
-                    </div>
-                </div>
-
-                <!-- Add Product -->
-                <div class="form-section">
-                    <h2 style="font-size:1rem;margin-bottom:12px;">➕ Aggiungi Prodotto</h2>
-                    <form id="productForm">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="productName">Nome Prodotto *</label>
-                                <input type="text" id="productName" placeholder="es. Sgrassatore" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productCategory">Categoria</label>
-                                <select id="productCategory"></select>
-                            </div>
-                            <div class="form-group">
-                                <label for="productQuantity">Quantità *</label>
-                                <input type="number" id="productQuantity" placeholder="0" min="0" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productDeposit">Deposito *</label>
-                                <input type="text" id="productDeposit" placeholder="es. Deposito A" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productLocation">Posizione *</label>
-                                <input type="text" id="productLocation" placeholder="es. Scaffale 3, Ripiano 2" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productNote">Note (opzionale)</label>
-                                <input type="text" id="productNote" placeholder="es. Attenzione: prodotto infiammabile">
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">➕ Aggiungi Prodotto</button>
-                            </div>
+            <div class="form-section">
+                <h2 style="font-size:1rem;margin-bottom:12px;">➕ Aggiungi Prodotto</h2>
+                <form id="productForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="productName">Nome Prodotto *</label>
+                            <input type="text" id="productName" placeholder="es. Sgrassatore" required>
                         </div>
-                    </form>
-                </div>
-
-                <!-- Search -->
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Cerca prodotto, deposito o posizione...">
-                    <div class="filter-group">
-                        <select id="filterCategory"><option value="">Tutte le categorie</option></select>
-                        <select id="filterDeposit"><option value="">Tutti i depositi</option></select>
-                        <button class="btn btn-warning" onclick="clearFilters()">Reset</button>
+                        <div class="form-group">
+                            <label for="productCategory">Categoria</label>
+                            <select id="productCategory"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productQuantity">Quantità *</label>
+                            <input type="number" id="productQuantity" placeholder="0" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productDeposit">Deposito *</label>
+                            <input type="text" id="productDeposit" placeholder="es. Deposito A" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productLocation">Posizione *</label>
+                            <input type="text" id="productLocation" placeholder="es. Scaffale 3, Ripiano 2" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productNote">Note (opzionale)</label>
+                            <input type="text" id="productNote" placeholder="es. Attenzione: prodotto infiammabile">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">➕ Aggiungi Prodotto</button>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Product List -->
-                <div class="product-list" id="productList">
-                    <div class="empty-state">Caricamento prodotti...</div>
-                </div>
-
+                </form>
             </div>
 
-            <!-- TAB 2: MOVEMENTS -->
-            <div id="tabMovements" class="tab-content">
-
-                <div class="form-section">
-                    <h2 style="font-size:1rem;margin-bottom:12px;">📊 Statistiche Movimenti</h2>
-                    <div class="movement-stats">
-                        <div class="movement-stat">
-                            <div class="label">Totale</div>
-                            <div class="value" id="movTotal">0</div>
-                        </div>
-                        <div class="movement-stat">
-                            <div class="label">Carichi</div>
-                            <div class="value green" id="movCarichi">0</div>
-                        </div>
-                        <div class="movement-stat">
-                            <div class="label">Scarichi</div>
-                            <div class="value red" id="movScarichi">0</div>
-                        </div>
-                    </div>
-
-                    <h2 style="font-size:1rem;margin-bottom:12px;margin-top:16px;">📋 Ultimi Movimenti</h2>
-                    <div class="movement-history" id="movementHistory">
-                        <div class="empty-state" style="padding:20px;">Nessun movimento registrato</div>
-                    </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Cerca prodotto, deposito o posizione...">
+                <div class="filter-group">
+                    <select id="filterCategory"><option value="">Tutte le categorie</option></select>
+                    <select id="filterDeposit"><option value="">Tutti i depositi</option></select>
+                    <button class="btn btn-warning" onclick="clearFilters()">Reset</button>
                 </div>
+            </div>
 
+            <div class="product-list" id="productList">
+                <div class="empty-state">Caricamento prodotti...</div>
             </div>
 
         </div>
@@ -982,6 +910,104 @@
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeMovementModal()">Annulla</button>
                     <button type="submit" class="btn btn-primary">💾 Registra</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DETTAGLIO PRODOTTO ===== -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="detailProductName">📦 Prodotto</h2>
+                <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+            </div>
+            <div id="detailContent">
+                <div style="background:#f8f9fa;padding:12px;border-radius:8px;margin-bottom:12px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.9rem;">
+                        <div><strong>Categoria:</strong> <span id="detailCategory"></span></div>
+                        <div><strong>Quantità:</strong> <span id="detailQuantity"></span></div>
+                        <div><strong>Deposito:</strong> <span id="detailDeposit"></span></div>
+                        <div><strong>Posizione:</strong> <span id="detailLocation"></span></div>
+                        <div style="grid-column:1/-1;"><strong>Note:</strong> <span id="detailNote"></span></div>
+                    </div>
+                </div>
+
+                <div class="movement-stats-modal">
+                    <div class="movement-stat-modal">
+                        <div class="label">Totale</div>
+                        <div class="value" id="detailMovTotal">0</div>
+                    </div>
+                    <div class="movement-stat-modal">
+                        <div class="label">Carichi</div>
+                        <div class="value green" id="detailMovCarichi">0</div>
+                    </div>
+                    <div class="movement-stat-modal">
+                        <div class="label">Scarichi</div>
+                        <div class="value red" id="detailMovScarichi">0</div>
+                    </div>
+                </div>
+
+                <h3 style="font-size:0.9rem;margin-bottom:8px;">📋 Storico Movimenti</h3>
+                <div class="movement-history" id="detailMovementsList">
+                    <div class="empty-state" style="padding:20px;">Caricamento...</div>
+                </div>
+
+                <div class="modal-actions" style="margin-top:12px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeDetailModal()">Chiudi</button>
+                    <button type="button" class="btn btn-success" onclick="var id = document.getElementById('detailProductName').dataset.productId; if(id) { openMovementModal(parseInt(id), 'carico'); closeDetailModal(); }">📥 Carico</button>
+                    <button type="button" class="btn btn-danger" onclick="var id = document.getElementById('detailProductName').dataset.productId; if(id) { openMovementModal(parseInt(id), 'scarico'); closeDetailModal(); }">📤 Scarico</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL MODIFICA MOVIMENTO ===== -->
+    <div class="modal-overlay" id="editMovementModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>✏️ Modifica Movimento</h2>
+                <button class="modal-close" onclick="closeEditMovementModal()">&times;</button>
+            </div>
+            <form id="editMovementForm">
+                <input type="hidden" id="editMovementId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Prodotto</label>
+                        <input type="text" id="editMovementProductName" disabled style="background:#f8f9fa;">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo Movimento</label>
+                        <div class="movement-toggle">
+                            <button type="button" class="btn active-carico" id="editMovTypeCarico" onclick="setEditMovementType('carico')">📥 Carico</button>
+                            <button type="button" class="btn inactive" id="editMovTypeScarico" onclick="setEditMovementType('scarico')">📤 Scarico</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMovementQuantity">Quantità *</label>
+                        <input type="number" id="editMovementQuantity" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMovementReason">Motivazione *</label>
+                        <select id="editMovementReason" required>
+                            <option value="">Seleziona...</option>
+                            <option value="Consegna">📦 Consegna</option>
+                            <option value="Utilizzo interno">🏢 Utilizzo interno</option>
+                            <option value="Prestito">🤝 Prestito</option>
+                            <option value="Reso">↩️ Reso</option>
+                            <option value="Scarto">🗑️ Scarto</option>
+                            <option value="Trasferimento">🚚 Trasferimento</option>
+                            <option value="Altro">📋 Altro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMovementNote">Note (opzionale)</label>
+                        <textarea id="editMovementNote" rows="2" placeholder="Dettagli aggiuntivi..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditMovementModal()">Annulla</button>
+                    <button type="submit" class="btn btn-primary">💾 Salva Modifiche</button>
                 </div>
             </form>
         </div>
@@ -1057,13 +1083,17 @@
         // ============================================================
         // 🔑 CONFIGURAZIONE SUPABASE
         // ============================================================
-        var SUPABASE_URL = 'https://iptcwcxjiaarquxeheop.supabase.co/';
+        var SUPABASE_URL = 'https://iptcwcxjiaarquxeheop.supabase.co';
         var SUPABASE_ANON_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwdGN3Y3hqaWFhcnF1eGVoZW9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MDgzNzksImV4cCI6MjA5ODI4NDM3OX0.-VhvjzKDOKPckJ6y5yl0nBVLU87i8amcPyGZTSdOcS0';
         // ============================================================
 
+        // ============================================================
+        // 🔐 CREDENZIALI PER LOGIN AUTOMATICO
+        // ============================================================
         var AUTO_EMAIL = 'luciorosalba@gmail.com';
-        var AUTO_PASSWORD = 'la_tua_password';
+        var AUTO_PASSWORD = '2020Zxcv.'; // <- SOSTITUISCI CON LA TUA PASSWORD!
+        // ============================================================
 
         var _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         var currentUser = null;
@@ -1071,6 +1101,7 @@
         var categories = [];
         var movements = [];
         var movementType = 'carico';
+        var editMovementType = 'carico';
 
         // ===== MOSTRA/NASCONDI =====
         function showLoading(show) {
@@ -1080,21 +1111,6 @@
         function showApp() {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('appContent').classList.add('visible');
-        }
-
-        // ===== TABS =====
-        function switchTab(tab) {
-            document.querySelectorAll('.tabs .btn').forEach(function(b) { b.classList.remove('active'); });
-            document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
-
-            if (tab === 'inventory') {
-                document.querySelector('.tabs .btn:first-child').classList.add('active');
-                document.getElementById('tabInventory').classList.add('active');
-            } else {
-                document.querySelector('.tabs .btn:last-child').classList.add('active');
-                document.getElementById('tabMovements').classList.add('active');
-                renderMovements();
-            }
         }
 
         // ===== LOGIN AUTOMATICO =====
@@ -1163,6 +1179,20 @@
                 caricoBtn.className = 'btn inactive';
                 scaricoBtn.className = 'btn active-scarico';
                 document.getElementById('movementModalTitle').textContent = '📤 Scarico Prodotto';
+            }
+        }
+
+        function setEditMovementType(type) {
+            editMovementType = type;
+            var caricoBtn = document.getElementById('editMovTypeCarico');
+            var scaricoBtn = document.getElementById('editMovTypeScarico');
+
+            if (type === 'carico') {
+                caricoBtn.className = 'btn active-carico';
+                scaricoBtn.className = 'btn inactive';
+            } else {
+                caricoBtn.className = 'btn inactive';
+                scaricoBtn.className = 'btn active-scarico';
             }
         }
 
@@ -1246,13 +1276,13 @@
                         quantity: parseInt(quantity),
                         reason: reason,
                         note: note || '',
-                        user_id: currentUser.id
+                        user_id: currentUser.id,
+                        movement_id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2)
                     }])
                     .select();
 
                 if (result.error) throw result.error;
 
-                // Aggiorna la quantità del prodotto
                 var newQty = type === 'carico' ?
                     product.quantity + parseInt(quantity) :
                     product.quantity - parseInt(quantity);
@@ -1278,6 +1308,162 @@
                 return false;
             }
         }
+
+// ===== MODIFICA MOVIMENTO =====
+async function updateMovement(movementId, type, quantity, reason, note) {
+    try {
+        var movement = movements.find(function(m) { return m.movement_id === movementId; });
+        if (!movement) {
+            alert('Movimento non trovato!');
+            return false;
+        }
+
+        var product = products.find(function(p) { return p.id === movement.product_id; });
+        if (!product) {
+            alert('Prodotto non trovato!');
+            return false;
+        }
+
+        var oldQty = movement.quantity;
+        var oldType = movement.type;
+        var newQty = parseInt(quantity);
+        var newType = type;
+
+        // Calcola la differenza per la quantità del prodotto
+        var quantityDiff = 0;
+        if (oldType === 'carico' && newType === 'carico') {
+            quantityDiff = newQty - oldQty;
+        } else if (oldType === 'scarico' && newType === 'scarico') {
+            quantityDiff = -(newQty - oldQty);
+        } else if (oldType === 'carico' && newType === 'scarico') {
+            quantityDiff = -(oldQty + newQty);
+        } else if (oldType === 'scarico' && newType === 'carico') {
+            quantityDiff = oldQty + newQty;
+        }
+
+        var newProductQty = product.quantity + quantityDiff;
+        if (newProductQty < 0) {
+            alert('⚠️ Quantità insufficiente! Modifica non possibile.');
+            return false;
+        }
+
+        // Aggiorna il movimento nel database
+        var result = await _supabase
+            .from('inventory_movements')
+            .update({
+                type: newType,
+                quantity: newQty,
+                reason: reason,
+                note: note || ''
+            })
+            .eq('movement_id', movementId)
+            .eq('user_id', currentUser.id);
+
+        if (result.error) throw result.error;
+
+        // Aggiorna la quantità del prodotto
+        await _supabase
+            .from('products')
+            .update({ quantity: newProductQty })
+            .eq('id', product.id)
+            .eq('user_id', currentUser.id);
+
+        // Aggiorna i dati locali
+        product.quantity = newProductQty;
+        
+        // RICARICA I MOVIMENTI DAL DATABASE
+        await loadMovements();
+        
+        // RENDERIZZA LA LISTA PRODOTTI
+        render();
+        
+        // CHIUDI IL MODAL DI MODIFICA
+        closeEditMovementModal();
+        
+        // CHIUDI IL DETTAGLIO ATTUALE
+        closeDetailModal();
+        
+        // RIAVRE IL DETTAGLIO DOPO UN BREVE DELAY PER PERMETTERE IL REFRESH
+        setTimeout(function() {
+            openDetailModal(product.id);
+        }, 400);
+        
+        return true;
+
+    } catch (err) {
+        alert('Errore: ' + err.message);
+        return false;
+    }
+}
+// ===== ELIMINA MOVIMENTO =====
+async function deleteMovement(movementId) {
+    if (!confirm('Eliminare questo movimento?')) return false;
+
+    try {
+        var movement = movements.find(function(m) { return m.movement_id === movementId; });
+        if (!movement) {
+            alert('Movimento non trovato!');
+            return false;
+        }
+
+        var product = products.find(function(p) { return p.id === movement.product_id; });
+        if (!product) {
+            alert('Prodotto non trovato!');
+            return false;
+        }
+
+        var newProductQty = product.quantity;
+        if (movement.type === 'carico') {
+            newProductQty = product.quantity - movement.quantity;
+        } else {
+            newProductQty = product.quantity + movement.quantity;
+        }
+
+        if (newProductQty < 0) {
+            alert('⚠️ Quantità insufficiente! Eliminazione non possibile.');
+            return false;
+        }
+
+        // Elimina il movimento
+        var result = await _supabase
+            .from('inventory_movements')
+            .delete()
+            .eq('movement_id', movementId)
+            .eq('user_id', currentUser.id);
+
+        if (result.error) throw result.error;
+
+        // Aggiorna la quantità del prodotto
+        await _supabase
+            .from('products')
+            .update({ quantity: newProductQty })
+            .eq('id', product.id)
+            .eq('user_id', currentUser.id);
+
+        // Aggiorna i dati locali
+        product.quantity = newProductQty;
+        
+        // RICARICA I MOVIMENTI DAL DATABASE
+        await loadMovements();
+        
+        // RENDERIZZA LA LISTA PRODOTTI
+        render();
+        
+        // CHIUDI IL DETTAGLIO ATTUALE
+        closeDetailModal();
+        
+        // RIAVRE IL DETTAGLIO DOPO UN BREVE DELAY
+        setTimeout(function() {
+            openDetailModal(product.id);
+        }, 400);
+        
+        return true;
+
+    } catch (err) {
+        alert('Errore: ' + err.message);
+        return false;
+    }
+}
 
         // ===== RENDER =====
         function render() {
@@ -1314,7 +1500,7 @@
                 var qtyEmoji = p.quantity <= 5 ? '⚠️' : (p.quantity <= 15 ? '📦' : '✅');
                 var color = getCategoryColor(p.category);
                 return `
-                        <div class="product-card" style="border-left-color:${color}">
+                        <div class="product-card" style="border-left-color:${color}" onclick="openDetailModal(${p.id})">
                             <div class="product-card-header">
                                 <span class="product-name">${escapeHtml(p.name)}</span>
                                 <span class="product-category" style="background:${color}22;color:${color}">${escapeHtml(p.category)}</span>
@@ -1340,7 +1526,7 @@
                                 <button class="btn btn-info btn-sm" onclick="event.stopPropagation(); openEditModal(${p.id})">✏️</button>
                                 <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteProduct(${p.id})">🗑️</button>
                             </div>
-                            <div class="product-edit-hint">👆 Click per dettagli movimenti</div>
+                            <div class="product-edit-hint">👆 Tocca per dettagli e storico movimenti</div>
                         </div>
                     `;
             }).join('');
@@ -1377,43 +1563,6 @@
                 .size;
             document.getElementById('totalCategories').textContent = categories.length;
             document.getElementById('totalMovements').textContent = movements.length;
-        }
-
-        function renderMovements() {
-            var history = document.getElementById('movementHistory');
-            var total = movements.length;
-            var carichi = movements.filter(function(m) { return m.type === 'carico'; }).length;
-            var scarichi = movements.filter(function(m) { return m.type === 'scarico'; }).length;
-
-            document.getElementById('movTotal').textContent = total;
-            document.getElementById('movCarichi').textContent = carichi;
-            document.getElementById('movScarichi').textContent = scarichi;
-
-            if (movements.length === 0) {
-                history.innerHTML = '<div class="empty-state" style="padding:20px;">Nessun movimento registrato</div>';
-                return;
-            }
-
-            history.innerHTML = movements.slice(0, 50).map(function(m) {
-                var typeClass = m.type === 'carico' ? 'type-carico' : 'type-scarico';
-                var typeIcon = m.type === 'carico' ? '📥' : '📤';
-                var date = new Date(m.created_at);
-                var dateStr = date.toLocaleDateString('it-IT') + ' ' + date.toLocaleTimeString('it-IT', { hour: '2-digit',
-                    minute: '2-digit' });
-                return `
-                        <div class="movement-item">
-                            <div>
-                                <span class="${typeClass}">${typeIcon} ${escapeHtml(m.product_name)}</span>
-                                <span class="reason">(${escapeHtml(m.reason)})</span>
-                                ${m.note ? `<span style="color:#95a5a6;font-size:0.7rem;"> - ${escapeHtml(m.note)}</span>` : ''}
-                            </div>
-                            <div style="text-align:right;">
-                                <div style="font-weight:600;">${m.type === 'carico' ? '+' : '-'}${m.quantity}</div>
-                                <div class="date">${dateStr}</div>
-                            </div>
-                        </div>
-                    `;
-            }).join('');
         }
 
         function updateDepositFilter() {
@@ -1469,6 +1618,119 @@
             document.getElementById('filterCategory').value = '';
             document.getElementById('filterDeposit').value = '';
             render();
+        }
+
+// ===== MODAL DETTAGLIO PRODOTTO =====
+function openDetailModal(productId) {
+    var product = products.find(function(p) { return p.id === productId; });
+    if (!product) return;
+
+    // Salva l'ID del prodotto nel dataset
+    document.getElementById('detailProductName').dataset.productId = productId;
+    document.getElementById('detailProductName').textContent = '📦 ' + escapeHtml(product.name);
+    document.getElementById('detailCategory').textContent = escapeHtml(product.category);
+    document.getElementById('detailQuantity').textContent = product.quantity;
+    document.getElementById('detailDeposit').textContent = escapeHtml(product.deposit);
+    document.getElementById('detailLocation').textContent = escapeHtml(product.location);
+    document.getElementById('detailNote').textContent = product.note || 'Nessuna nota';
+
+    // FILTRA I MOVIMENTI PER QUESTO PRODOTTO (USA movements AGGIORNATO)
+    var productMovements = movements.filter(function(m) {
+        return m.product_id === productId;
+    });
+
+    // Ordina i movimenti per data (più recenti prima)
+    productMovements.sort(function(a, b) {
+        return new Date(b.created_at) - new Date(a.created_at);
+    });
+
+    var total = productMovements.length;
+    var carichi = productMovements.filter(function(m) { return m.type === 'carico'; }).length;
+    var scarichi = productMovements.filter(function(m) { return m.type === 'scarico'; }).length;
+
+    document.getElementById('detailMovTotal').textContent = total;
+    document.getElementById('detailMovCarichi').textContent = carichi;
+    document.getElementById('detailMovScarichi').textContent = scarichi;
+
+    var history = document.getElementById('detailMovementsList');
+    if (productMovements.length === 0) {
+        history.innerHTML = '<div class="empty-state" style="padding:20px;">Nessun movimento registrato per questo prodotto</div>';
+    } else {
+        history.innerHTML = productMovements.slice(0, 50).map(function(m) {
+            var typeClass = m.type === 'carico' ? 'type-carico' : 'type-scarico';
+            var typeIcon = m.type === 'carico' ? '📥' : '📤';
+            var qtyClass = m.type === 'carico' ? 'carico' : 'scarico';
+            var date = new Date(m.created_at);
+            var dateStr = date.toLocaleDateString('it-IT') + ' ' + date.toLocaleTimeString('it-IT', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            return `
+                    <div class="movement-item">
+                        <div>
+                            <span class="${typeClass}">${typeIcon} ${escapeHtml(m.reason)}</span>
+                            ${m.note ? `<span style="color:#95a5a6;font-size:0.7rem;"> - ${escapeHtml(m.note)}</span>` : ''}
+                            <div class="date">${dateStr}</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                            <div class="qty ${qtyClass}">${m.type === 'carico' ? '+' : '-'}${m.quantity}</div>
+                            <button class="btn btn-info btn-xs" onclick="event.stopPropagation(); openEditMovementModal('${m.movement_id}')">✏️</button>
+                            <button class="btn btn-danger btn-xs" onclick="event.stopPropagation(); deleteMovement('${m.movement_id}')">🗑️</button>
+                        </div>
+                    </div>
+                `;
+        }).join('');
+    }
+
+    // Mostra il modal
+    document.getElementById('detailModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+// ===== RICARICA IL DETTAGLIO DEL PRODOTTO =====
+function refreshDetail(productId) {
+    // Chiudi il modal attuale
+    closeDetailModal();
+    // Riaprilo dopo un breve delay per permettere il refresh
+    setTimeout(function() {
+        openDetailModal(productId);
+    }, 300);
+}
+
+        // ===== MODAL MODIFICA MOVIMENTO =====
+        function openEditMovementModal(movementId) {
+            var movement = movements.find(function(m) { return m.movement_id === movementId; });
+            if (!movement) {
+                alert('Movimento non trovato!');
+                return;
+            }
+
+            var product = products.find(function(p) { return p.id === movement.product_id; });
+            if (!product) {
+                alert('Prodotto non trovato!');
+                return;
+            }
+
+            document.getElementById('editMovementId').value = movementId;
+            document.getElementById('editMovementProductName').value = product.name + ' (disponibili: ' + product.quantity +
+                ')';
+            document.getElementById('editMovementQuantity').value = movement.quantity;
+            document.getElementById('editMovementReason').value = movement.reason;
+            document.getElementById('editMovementNote').value = movement.note || '';
+
+            setEditMovementType(movement.type);
+
+            document.getElementById('editMovementModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeEditMovementModal() {
+            document.getElementById('editMovementModal').classList.remove('active');
+            document.body.style.overflow = '';
         }
 
         // ===== CRUD PRODOTTI =====
@@ -1750,6 +2012,27 @@
             closeMovementModal();
         });
 
+        document.getElementById('editMovementForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var movementId = document.getElementById('editMovementId').value;
+            var type = editMovementType;
+            var quantity = parseInt(document.getElementById('editMovementQuantity').value);
+            var reason = document.getElementById('editMovementReason').value;
+            var note = document.getElementById('editMovementNote').value.trim();
+
+            if (!quantity || quantity <= 0) {
+                alert('Inserisci una quantità valida');
+                return;
+            }
+            if (!reason) {
+                alert('Seleziona una motivazione');
+                return;
+            }
+
+            updateMovement(movementId, type, quantity, reason, note);
+            closeEditMovementModal();
+        });
+
         document.getElementById('searchInput').addEventListener('input', render);
         document.getElementById('filterCategory').addEventListener('change', render);
         document.getElementById('filterDeposit').addEventListener('change', render);
@@ -1763,6 +2046,12 @@
         document.getElementById('movementModal').addEventListener('click', function(e) {
             if (e.target === this) closeMovementModal();
         });
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailModal();
+        });
+        document.getElementById('editMovementModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditMovementModal();
+        });
 
         document.getElementById('newCategoryInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -1770,6 +2059,9 @@
                 addCategory();
             }
         });
+document.getElementById('editMovementModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEditMovementModal();
+});
 
         // ===== AVVIA APP =====
         autoLogin();
