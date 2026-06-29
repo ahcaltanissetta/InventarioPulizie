@@ -1343,6 +1343,7 @@ async function updateMovement(movementId, type, quantity, reason, note) {
 
         console.log('📊 Movimento trovato - ID numerico:', movement.id);
         console.log('📊 Quantità attuale nel movimento:', movement.quantity);
+        console.log('📊 Tipo attuale nel movimento:', movement.type);
 
         var product = products.find(function(p) { return p.id === movement.product_id; });
         if (!product) {
@@ -1363,7 +1364,7 @@ async function updateMovement(movementId, type, quantity, reason, note) {
             return false;
         }
 
-        // Calcola la differenza
+        // Calcola la differenza per la quantità del prodotto
         var quantityDiff = 0;
         if (oldType === 'carico' && newType === 'carico') {
             quantityDiff = newQty - oldQty;
@@ -1383,67 +1384,87 @@ async function updateMovement(movementId, type, quantity, reason, note) {
             return false;
         }
 
-        // USA L'ID NUMERICO PER L'AGGIORNAMENTO
+        // ============================================================
+        // 1. AGGIORNA IL MOVIMENTO NEL DATABASE (FORZA L'AGGIORNAMENTO)
+        // ============================================================
         var updateData = {
             type: newType,
-            quantity: newQty,
+            quantity: newQty,  // <- QUESTA È LA QUANTITÀ CHE DEVE CAMBIARE!
             reason: reason,
             note: note || ''
         };
-        console.log('📤 Invio aggiornamento con ID numerico:', movement.id);
+        
+        console.log('📤 Invio aggiornamento a Supabase:');
+        console.log('  - ID movimento:', movement.id);
+        console.log('  - Dati da aggiornare:', updateData);
 
+        // AGGIORNA IL MOVIMENTO USANDO L'ID NUMERICO
         var result = await _supabase
             .from('inventory_movements')
             .update(updateData)
             .eq('id', movement.id);
 
         if (result.error) {
-            console.error('❌ Errore:', result.error);
+            console.error('❌ Errore Supabase:', result.error);
             throw result.error;
         }
+        
         console.log('✅ Movimento aggiornato nel database');
+        console.log('📊 Nuova quantità nel database:', newQty);
 
-        // Aggiorna il prodotto
+        // ============================================================
+        // 2. AGGIORNA IL PRODOTTO
+        // ============================================================
         await _supabase
             .from('products')
             .update({ quantity: newProductQty })
             .eq('id', product.id)
             .eq('user_id', currentUser.id);
-        console.log('✅ Prodotto aggiornato');
+        console.log('✅ Prodotto aggiornato nel database');
 
-        // Aggiorna dati locali
+        // ============================================================
+        // 3. AGGIORNA I DATI LOCALI
+        // ============================================================
         product.quantity = newProductQty;
-        movement.quantity = newQty;
+        movement.quantity = newQty;  // <- FORZA L'AGGIORNAMENTO LOCALE
         movement.type = newType;
         movement.reason = reason;
         movement.note = note || '';
 
-        // FORZA IL RICARICAMENTO COMPLETO
+        console.log('📊 Dati locali aggiornati:');
+        console.log('  - Nuova quantità movimento:', movement.quantity);
+        console.log('  - Nuova quantità prodotto:', product.quantity);
+
+        // ============================================================
+        // 4. RICARICA TUTTI I DATI DAL DATABASE
+        // ============================================================
         await loadProducts();
         await loadMovements();
         console.log('✅ Dati ricaricati. Movimenti totali:', movements.length);
 
-        // RENDERIZZA
+        // ============================================================
+        // 5. RENDERIZZA
+        // ============================================================
         render();
         console.log('✅ Render completato');
 
-        // CHIUDI MODALI
+        // ============================================================
+        // 6. CHIUDI MODALI E RIAPRI IL DETTAGLIO
+        // ============================================================
         closeEditMovementModal();
         closeDetailModal();
 
-        // RIAVRE IL DETTAGLIO CON DATI FRESCHI
         setTimeout(async function() {
-            // Ricarica tutto prima di aprire
             await loadProducts();
             await loadMovements();
             render();
             openDetailModal(product.id);
-        }, 300);
+        }, 400);
 
         return true;
 
     } catch (err) {
-        console.error('❌ Errore:', err);
+        console.error('❌ Errore in updateMovement:', err);
         alert('Errore: ' + err.message);
         return false;
     }
@@ -1774,25 +1795,14 @@ function refreshDetail(productId) {
 function openEditMovementModal(movementId) {
     console.log('✏️ Apertura modifica movimento ID:', movementId);
     
-    // Cerca il movimento PER ID NUMERICO
     var movement = movements.find(function(m) { 
-        return m.id === parseInt(movementId) || String(m.id) === String(movementId);
+        return m.id === parseInt(movementId);
     });
     
     if (!movement) {
-        // Se non trovato, prova a cercare per movement_id (UUID)
-        movement = movements.find(function(m) { 
-            return m.movement_id === movementId;
-        });
-    }
-    
-    if (!movement) {
-        alert('❌ Movimento non trovato!');
-        console.error('Movimenti disponibili:', movements);
+        alert('❌ Movimento non trovato! ID: ' + movementId);
         return;
     }
-
-    console.log('📊 Movimento trovato - ID numerico:', movement.id);
 
     var product = products.find(function(p) { return p.id === movement.product_id; });
     if (!product) {
@@ -1800,10 +1810,11 @@ function openEditMovementModal(movementId) {
         return;
     }
 
-    // USA L'ID NUMERICO (NON l'UUID)
+    console.log('📊 Movimento trovato - Quantità:', movement.quantity);
+
     document.getElementById('editMovementId').value = movement.id;
     document.getElementById('editMovementProductName').value = product.name + ' (disponibili: ' + product.quantity + ')';
-    document.getElementById('editMovementQuantity').value = movement.quantity;
+    document.getElementById('editMovementQuantity').value = movement.quantity;  // <- VALORE CORRETTO
     document.getElementById('editMovementReason').value = movement.reason;
     document.getElementById('editMovementNote').value = movement.note || '';
 
@@ -1812,7 +1823,6 @@ function openEditMovementModal(movementId) {
     document.getElementById('editMovementModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 }
-
         function closeEditMovementModal() {
             document.getElementById('editMovementModal').classList.remove('active');
             document.body.style.overflow = '';
