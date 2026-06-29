@@ -1328,22 +1328,22 @@
 async function updateMovement(movementId, type, quantity, reason, note) {
     try {
         console.log('🔄 Inizio modifica movimento:', movementId);
-        console.log('📊 Nuovi valori:', { type, quantity, reason, note });
+        console.log('📊 Nuovi valori ricevuti:', { type, quantity, reason, note });
         
         // Trova il movimento originale
         var movement = movements.find(function(m) { return m.movement_id === movementId; });
         if (!movement) {
-            // Prova a cercare per id numerico
-            movement = movements.find(function(m) { return String(m.id) === String(movementId); });
-        }
-        
-        if (!movement) {
-            alert('❌ Movimento non trovato! ID: ' + movementId);
-            console.error('❌ Movimento non trovato. Movimenti disponibili:', movements);
+            alert('❌ Movimento non trovato!');
             return false;
         }
 
-        console.log('📊 Movimento originale:', movement);
+        console.log('📊 Movimento originale:', {
+            id: movement.id,
+            movement_id: movement.movement_id,
+            type: movement.type,
+            quantity: movement.quantity,
+            reason: movement.reason
+        });
 
         var product = products.find(function(p) { return p.id === movement.product_id; });
         if (!product) {
@@ -1358,6 +1358,13 @@ async function updateMovement(movementId, type, quantity, reason, note) {
 
         console.log('📊 Vecchio movimento:', { oldType, oldQty });
         console.log('📊 Nuovo movimento:', { newType, newQty });
+
+        // Se la quantità non è cambiata e il tipo non è cambiato, esci
+        if (oldQty === newQty && oldType === newType) {
+            console.log('⚠️ Nessuna modifica rilevata, esco.');
+            alert('Nessuna modifica rilevata.');
+            return false;
+        }
 
         // Calcola la differenza per la quantità del prodotto
         var quantityDiff = 0;
@@ -1379,15 +1386,18 @@ async function updateMovement(movementId, type, quantity, reason, note) {
             return false;
         }
 
-        // 1. Aggiorna il movimento nel database usando movement_id
+        // 1. Aggiorna il movimento nel database
+        var updateData = {
+            type: newType,
+            quantity: newQty,
+            reason: reason,
+            note: note || ''
+        };
+        console.log('📤 Invio aggiornamento a Supabase:', updateData);
+
         var result = await _supabase
             .from('inventory_movements')
-            .update({
-                type: newType,
-                quantity: newQty,
-                reason: reason,
-                note: note || ''
-            })
+            .update(updateData)
             .eq('movement_id', movementId);
 
         if (result.error) {
@@ -1406,8 +1416,12 @@ async function updateMovement(movementId, type, quantity, reason, note) {
 
         // 3. Aggiorna i dati locali
         product.quantity = newProductQty;
-        
-        // 4. RICARICA TUTTI I DATI DAL DATABASE
+        movement.quantity = newQty;
+        movement.type = newType;
+        movement.reason = reason;
+        movement.note = note || '';
+
+        // 4. RICARICA I DATI DAL DATABASE
         await loadProducts();
         await loadMovements();
         console.log('✅ Dati ricaricati. Movimenti totali:', movements.length);
@@ -1420,7 +1434,7 @@ async function updateMovement(movementId, type, quantity, reason, note) {
         closeEditMovementModal();
         closeDetailModal();
 
-        // 7. RIAVRE IL DETTAGLIO DOPO UN BREVE DELAY
+        // 7. RIAVRE IL DETTAGLIO
         setTimeout(function() {
             openDetailModal(product.id);
         }, 400);
@@ -1754,22 +1768,12 @@ function openEditMovementModal(movementId) {
     console.log('✏️ Apertura modifica movimento ID:', movementId);
     console.log('📊 Movimenti disponibili:', movements.length);
     
-    // Cerca il movimento per movement_id
     var movement = movements.find(function(m) { 
-        console.log('  Controllo:', m.movement_id, '==', movementId);
         return m.movement_id === movementId; 
     });
     
     if (!movement) {
-        // Prova a cercare per id numerico
-        movement = movements.find(function(m) { 
-            return String(m.id) === String(movementId); 
-        });
-    }
-    
-    if (!movement) {
         alert('❌ Movimento non trovato! ID: ' + movementId);
-        console.error('❌ Movimento non trovato. Movimenti disponibili:', movements);
         return;
     }
 
@@ -1779,11 +1783,18 @@ function openEditMovementModal(movementId) {
         return;
     }
 
+    // IMPOSTA I VALORI NEL FORM
     document.getElementById('editMovementId').value = movementId;
     document.getElementById('editMovementProductName').value = product.name + ' (disponibili: ' + product.quantity + ')';
     document.getElementById('editMovementQuantity').value = movement.quantity;
     document.getElementById('editMovementReason').value = movement.reason;
     document.getElementById('editMovementNote').value = movement.note || '';
+
+    console.log('📊 Valori impostati nel form:', {
+        quantity: movement.quantity,
+        reason: movement.reason,
+        note: movement.note
+    });
 
     setEditMovementType(movement.type);
 
@@ -2075,26 +2086,37 @@ function openEditMovementModal(movementId) {
             closeMovementModal();
         });
 
-        document.getElementById('editMovementForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var movementId = document.getElementById('editMovementId').value;
-            var type = editMovementType;
-            var quantity = parseInt(document.getElementById('editMovementQuantity').value);
-            var reason = document.getElementById('editMovementReason').value;
-            var note = document.getElementById('editMovementNote').value.trim();
+ document.getElementById('editMovementForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // LEGGI I VALORI DAL FORM
+    var movementId = document.getElementById('editMovementId').value;
+    var type = editMovementType;
+    var quantityInput = document.getElementById('editMovementQuantity');
+    var quantity = parseInt(quantityInput.value);
+    var reason = document.getElementById('editMovementReason').value;
+    var note = document.getElementById('editMovementNote').value.trim();
 
-            if (!quantity || quantity <= 0) {
-                alert('Inserisci una quantità valida');
-                return;
-            }
-            if (!reason) {
-                alert('Seleziona una motivazione');
-                return;
-            }
+    console.log('📝 DATI FORM DI MODIFICA:');
+    console.log('  - movementId:', movementId);
+    console.log('  - type:', type);
+    console.log('  - quantity RAW:', quantityInput.value);
+    console.log('  - quantity PARSED:', quantity);
+    console.log('  - reason:', reason);
+    console.log('  - note:', note);
 
-            updateMovement(movementId, type, quantity, reason, note);
-            closeEditMovementModal();
-        });
+    if (!quantity || quantity <= 0) {
+        alert('Inserisci una quantità valida');
+        return;
+    }
+    if (!reason) {
+        alert('Seleziona una motivazione');
+        return;
+    }
+
+    updateMovement(movementId, type, quantity, reason, note);
+    closeEditMovementModal();
+});
 
         document.getElementById('searchInput').addEventListener('input', render);
         document.getElementById('filterCategory').addEventListener('change', render);
