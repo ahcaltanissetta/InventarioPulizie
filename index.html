@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Supabase Auth</title>
+    <title>Inventario Pulizie</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
     <style>
@@ -70,12 +70,6 @@
         .btn-success:hover {
             background: #27ae60;
         }
-        .btn-purple {
-            background: #9b59b6;
-        }
-        .btn-purple:hover {
-            background: #8e44ad;
-        }
         .btn-danger {
             background: #e74c3c;
         }
@@ -99,9 +93,6 @@
         .message.info {
             background: #e8f0fe;
             color: #2980b9;
-        }
-        .hidden {
-            display: none;
         }
         #log {
             background: #f4f4f4;
@@ -136,12 +127,15 @@
         .app-content.visible {
             display: block;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>🧪 Test Supabase</h1>
+        <h1>🧹 Inventario Pulizie</h1>
 
         <div id="loginBox">
             <h2>🔐 Registrati / Accedi</h2>
@@ -172,19 +166,19 @@
         // ============================================================
         // 🔑 CONFIGURAZIONE SUPABASE - METTI LE TUE CHIAVI QUI!
         // ============================================================
-        const SUPABASE_URL = 'https://iptcwcxjiaarquxeheop.supabase.co/';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwdGN3Y3hqaWFhcnF1eGVoZW9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MDgzNzksImV4cCI6MjA5ODI4NDM3OX0.-VhvjzKDOKPckJ6y5yl0nBVLU87i8amcPyGZTSdOcS0'; // <- SOSTITUISCI!
+        var SUPABASE_URL = 'https://iptcwcxjiaarquxeheop.supabase.co/';
+        var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwdGN3Y3hqaWFhcnF1eGVoZW9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MDgzNzksImV4cCI6MjA5ODI4NDM3OX0.-VhvjzKDOKPckJ6y5yl0nBVLU87i8amcPyGZTSdOcS0';
         // ============================================================
 
-        // Inizializza Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Inizializza Supabase UNA VOLTA SOLA
+        var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // ===== FUNZIONI DI LOG =====
         function log(msg, isError) {
             isError = isError || false;
-            const el = document.getElementById('log');
-            const time = new Date().toLocaleTimeString();
-            const prefix = isError ? '❌' : '✅';
+            var el = document.getElementById('log');
+            var time = new Date().toLocaleTimeString();
+            var prefix = isError ? '❌' : '✅';
             el.innerHTML += '\n[' + time + '] ' + prefix + ' ' + msg;
             el.scrollTop = el.scrollHeight;
             console.log(msg);
@@ -192,15 +186,15 @@
 
         function showMessage(msg, type) {
             type = type || 'error';
-            const el = document.getElementById('message');
+            var el = document.getElementById('message');
             el.textContent = msg;
             el.className = 'message ' + type;
         }
 
         // ===== REGISTRAZIONE =====
         async function testSignup() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value.trim();
 
             if (!email || !password) {
                 showMessage('Inserisci email e password!', 'error');
@@ -215,19 +209,19 @@
             showMessage('Registrazione in corso...', 'info');
 
             try {
-                const { data, error } = await supabase.auth.signUp({
+                var result = await supabaseClient.auth.signUp({
                     email: email,
                     password: password
                 });
 
-                if (error) {
-                    log('ERRORE: ' + error.message, true);
-                    showMessage('Errore: ' + error.message, 'error');
+                if (result.error) {
+                    log('ERRORE: ' + result.error.message, true);
+                    showMessage('Errore: ' + result.error.message, 'error');
                     return;
                 }
 
                 log('REGISTRAZIONE RIUSCITA!');
-                log('User: ' + JSON.stringify(data.user));
+                log('User: ' + JSON.stringify(result.data.user));
                 showMessage('Registrazione completata! Ora puoi accedere.', 'success');
 
                 // Prova login automatico
@@ -243,8 +237,8 @@
 
         // ===== LOGIN =====
         async function testLogin() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value.trim();
 
             if (!email || !password) {
                 showMessage('Inserisci email e password!', 'error');
@@ -255,25 +249,25 @@
             showMessage('Accesso in corso...', 'info');
 
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
+                var result = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
 
-                if (error) {
-                    log('ERRORE LOGIN: ' + error.message, true);
-                    showMessage('Errore login: ' + error.message, 'error');
+                if (result.error) {
+                    log('ERRORE LOGIN: ' + result.error.message, true);
+                    showMessage('Errore login: ' + result.error.message, 'error');
                     return;
                 }
 
                 log('LOGIN RIUSCITO!');
-                log('User: ' + JSON.stringify(data.user));
-                showMessage('Benvenuto ' + data.user.email + '!', 'success');
+                log('User: ' + JSON.stringify(result.data.user));
+                showMessage('Benvenuto ' + result.data.user.email + '!', 'success');
 
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('appContent').className = 'app-content visible';
-                document.getElementById('userEmail').textContent = data.user.email;
-                document.getElementById('userEmail2').textContent = data.user.email;
+                document.getElementById('userEmail').textContent = result.data.user.email;
+                document.getElementById('userEmail2').textContent = result.data.user.email;
 
             } catch (err) {
                 log('ERRORE: ' + err.message, true);
@@ -284,7 +278,7 @@
         // ===== LOGOUT =====
         async function testLogout() {
             try {
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 log('Logout effettuato');
                 document.getElementById('loginBox').style.display = 'block';
                 document.getElementById('appContent').className = 'app-content';
@@ -297,17 +291,13 @@
         // ===== CONTROLLA SESSIONE ALL'AVVIO =====
         async function checkSession() {
             try {
-                const { data, error } = await supabase.auth.getSession();
-                if (error) {
-                    log('Errore check sessione: ' + error.message, true);
-                    return;
-                }
-                if (data.session) {
-                    log('Sessione attiva: ' + data.session.user.email);
+                var result = await supabaseClient.auth.getSession();
+                if (result.data.session) {
+                    log('Sessione attiva: ' + result.data.session.user.email);
                     document.getElementById('loginBox').style.display = 'none';
                     document.getElementById('appContent').className = 'app-content visible';
-                    document.getElementById('userEmail').textContent = data.session.user.email;
-                    document.getElementById('userEmail2').textContent = data.session.user.email;
+                    document.getElementById('userEmail').textContent = result.data.session.user.email;
+                    document.getElementById('userEmail2').textContent = result.data.session.user.email;
                 } else {
                     log('Nessuna sessione attiva');
                 }
