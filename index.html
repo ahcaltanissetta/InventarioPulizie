@@ -1202,19 +1202,20 @@
             render();
         }
 
-        async function loadProducts() {
-            try {
-                var result = await _supabase
-                    .from('products')
-                    .select('*')
-                    .order('id', { ascending: true });
-                if (result.error) throw result.error;
-                products = result.data || [];
-            } catch (err) {
-                console.error('Errore caricamento prodotti:', err);
-                products = [];
-            }
-        }
+async function loadProducts() {
+    try {
+        var result = await _supabase
+            .from('products')
+            .select('*')
+            .order('id', { ascending: true });
+        if (result.error) throw result.error;
+        products = result.data || [];
+        console.log('✅ Prodotti caricati:', products.length);
+    } catch (err) {
+        console.error('❌ Errore caricamento prodotti:', err);
+        products = [];
+    }
+}
 
         async function loadCategories() {
             try {
@@ -1256,7 +1257,6 @@
         if (result.error) throw result.error;
         movements = result.data || [];
         console.log('✅ Movimenti caricati:', movements.length);
-        // Mostra i primi 3 movimenti per debug
         if (movements.length > 0) {
             console.log('📊 Primo movimento:', movements[0]);
         }
@@ -1455,16 +1455,9 @@ async function deleteMovement(movementId) {
     try {
         console.log('🗑️ Eliminazione movimento:', movementId);
         
-        // Cerca il movimento PER ID NUMERICO
         var movement = movements.find(function(m) { 
-            return m.id === parseInt(movementId) || String(m.id) === String(movementId);
+            return m.id === parseInt(movementId);
         });
-        
-        if (!movement) {
-            movement = movements.find(function(m) { 
-                return m.movement_id === movementId;
-            });
-        }
         
         if (!movement) {
             alert('Movimento non trovato!');
@@ -1491,7 +1484,7 @@ async function deleteMovement(movementId) {
             return false;
         }
 
-        // ELIMINA USANDO L'ID NUMERICO
+        // ELIMINA IL MOVIMENTO
         var result = await _supabase
             .from('inventory_movements')
             .delete()
@@ -1500,17 +1493,22 @@ async function deleteMovement(movementId) {
         if (result.error) throw result.error;
         console.log('✅ Movimento eliminato');
 
+        // AGGIORNA IL PRODOTTO
         await _supabase
             .from('products')
             .update({ quantity: newProductQty })
             .eq('id', product.id)
             .eq('user_id', currentUser.id);
 
+        // AGGIORNA DATI LOCALI
         product.quantity = newProductQty;
+        
+        // RICARICA TUTTI I DATI
         await loadProducts();
         await loadMovements();
         render();
         
+        // CHIUDI E RIAPRI IL DETTAGLIO
         closeDetailModal();
         setTimeout(function() {
             openDetailModal(product.id);
@@ -1519,6 +1517,7 @@ async function deleteMovement(movementId) {
         return true;
 
     } catch (err) {
+        console.error('❌ Errore in deleteMovement:', err);
         alert('Errore: ' + err.message);
         return false;
     }
@@ -1683,7 +1682,7 @@ async function deleteMovement(movementId) {
 async function openDetailModal(productId) {
     console.log('📂 Apertura dettaglio prodotto:', productId);
     
-    // FORZA IL RICARICAMENTO DEI DATI DAL DATABASE
+    // Forza il ricaricamento
     await loadProducts();
     await loadMovements();
     
@@ -1693,7 +1692,6 @@ async function openDetailModal(productId) {
         return;
     }
 
-    // Salva l'ID del prodotto nel dataset
     document.getElementById('detailProductName').dataset.productId = productId;
     document.getElementById('detailProductName').textContent = '📦 ' + escapeHtml(product.name);
     document.getElementById('detailCategory').textContent = escapeHtml(product.category);
@@ -1702,19 +1700,16 @@ async function openDetailModal(productId) {
     document.getElementById('detailLocation').textContent = escapeHtml(product.location);
     document.getElementById('detailNote').textContent = product.note || 'Nessuna nota';
 
-    // FILTRA I MOVIMENTI PER QUESTO PRODOTTO
     var productMovements = movements.filter(function(m) {
         return m.product_id === productId;
     });
 
     console.log('📊 Movimenti trovati per questo prodotto:', productMovements.length);
     
-    // Mostra i movimenti in console per debug
     productMovements.forEach(function(m) {
-        console.log('  - ID:', m.id, '| movement_id:', m.movement_id, '| Qty:', m.quantity, '| Tipo:', m.type);
+        console.log('  - ID:', m.id, '| Qty:', m.quantity, '| Tipo:', m.type);
     });
 
-    // Ordina per data (più recenti prima)
     productMovements.sort(function(a, b) {
         return new Date(b.created_at) - new Date(a.created_at);
     });
@@ -1740,8 +1735,6 @@ async function openDetailModal(productId) {
                 hour: '2-digit',
                 minute: '2-digit'
             });
-            // USA L'ID NUMERICO PER IDENTIFICARE IL MOVIMENTO
-            var movementId = m.id;  // <- USA ID NUMERICO!
             return `
                     <div class="movement-item">
                         <div>
@@ -1751,15 +1744,14 @@ async function openDetailModal(productId) {
                         </div>
                         <div style="display:flex;align-items:center;gap:6px;">
                             <div class="qty ${qtyClass}">${m.type === 'carico' ? '+' : '-'}${m.quantity}</div>
-                            <button class="btn btn-info btn-xs" onclick="event.stopPropagation(); openEditMovementModal(${movementId})">✏️</button>
-                            <button class="btn btn-danger btn-xs" onclick="event.stopPropagation(); deleteMovement(${movementId})">🗑️</button>
+                            <button class="btn btn-info btn-xs" onclick="event.stopPropagation(); openEditMovementModal(${m.id})">✏️</button>
+                            <button class="btn btn-danger btn-xs" onclick="event.stopPropagation(); deleteMovement(${m.id})">🗑️</button>
                         </div>
                     </div>
                 `;
         }).join('');
     }
 
-    // Mostra il modal
     document.getElementById('detailModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 }
