@@ -4,12 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>Gestione Inventario Pulizie</title>
-    
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-        <style>
-        /* ... (stessi stili di prima, aggiungo solo qualche modifica per login) ... */
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -36,86 +31,6 @@
             padding: 0 5px;
         }
 
-        /* ===== LOGIN ===== */
-        .login-container {
-            max-width: 400px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        .login-container h2 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        .login-container .form-group {
-            margin-bottom: 15px;
-        }
-
-        .login-container .btn {
-            margin-top: 10px;
-        }
-
-        .login-container .error {
-            color: #e74c3c;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .auth-toggle {
-            text-align: center;
-            margin-top: 15px;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-
-        .auth-toggle a {
-            color: #3498db;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .user-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 10px 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .user-info .email {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .user-info .btn {
-            width: auto;
-            padding: 6px 16px;
-            font-size: 0.85rem;
-        }
-
-        /* Nascondi app finché non loggato */
-        .app-content {
-            display: none;
-        }
-
-        .app-content.visible {
-            display: block;
-        }
-
-        .login-container.hidden {
-            display: none;
-        }
-
-        /* ... resto degli stessi stili ... */
         .form-section {
             background: white;
             padding: 16px;
@@ -158,15 +73,6 @@
             outline: none;
             border-color: #3498db;
             box-shadow: 0 0 0 3px rgba(52,152,219,0.12);
-        }
-
-        .form-group input[type="number"] {
-            -moz-appearance: textfield;
-        }
-        .form-group input[type="number"]::-webkit-outer-spin-button,
-        .form-group input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
         }
 
         .btn {
@@ -214,15 +120,6 @@
         }
         .btn-warning:active {
             background: #e67e22;
-            transform: scale(0.97);
-        }
-
-        .btn-secondary {
-            background: #95a5a6;
-            color: white;
-        }
-        .btn-secondary:active {
-            background: #7f8c8d;
             transform: scale(0.97);
         }
 
@@ -280,12 +177,6 @@
             background: white;
         }
 
-        .search-box input:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.12);
-        }
-
         .filter-group {
             display: flex;
             flex-wrap: wrap;
@@ -300,13 +191,6 @@
             border-radius: 10px;
             font-size: 0.85rem;
             background: white;
-            -webkit-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 16px;
-            padding-right: 32px;
         }
 
         .filter-group .btn {
@@ -331,7 +215,6 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            transition: background 0.2s;
             border-left: 5px solid #3498db;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
@@ -524,10 +407,6 @@
             color: #7f8c8d;
         }
 
-        .category-tag .category-actions button:active {
-            background: rgba(0,0,0,0.1);
-        }
-
         .add-category-form {
             display: flex;
             gap: 8px;
@@ -542,12 +421,6 @@
             border: 2px solid #dce4ec;
             border-radius: 10px;
             font-size: 0.95rem;
-        }
-
-        .add-category-form input:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.12);
         }
 
         .add-category-form .btn {
@@ -649,16 +522,13 @@
 
         @media (max-width: 480px) {
             body { padding: 8px; }
-            h1 { font-size: 1.3rem; margin-bottom: 12px; }
+            h1 { font-size: 1.3rem; }
             .stats { grid-template-columns: 1fr 1fr; gap: 4px; }
             .stat-card { padding: 8px 4px; }
             .stat-card .number { font-size: 1.1rem; }
-            .stat-card h3 { font-size: 0.5rem; }
-            .product-card { padding: 12px 14px; }
-            .modal { padding: 18px 16px 16px; margin: 10px; }
+            .modal { padding: 18px 16px; }
             .modal-actions { flex-direction: column; }
             .modal-actions .btn { width: 100%; }
-            .login-container { padding: 20px; margin: 20px auto; }
         }
 
         @media (min-width: 769px) {
@@ -672,864 +542,508 @@
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>🧹 Inventario Pulizie</h1>
 
-<!-- ===== LOGIN ===== -->
-<div class="login-container" id="loginContainer">
-    <h2>🔐 Accedi</h2>
-    <form id="loginForm">
-        <div class="form-group">
-            <label for="loginEmail">Email</label>
-            <input type="email" id="loginEmail" placeholder="tu@email.com" required>
-        </div>
-        <div class="form-group">
-            <label for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" placeholder="••••••••" required minlength="6">
-        </div>
-        <button type="submit" class="btn btn-primary">Accedi</button>
-        <div class="auth-toggle">
-            Non hai un account? <a onclick="showSignup()">Registrati</a>
-        </div>
-        <div class="error" id="loginError"></div>
-    </form>
-
-    <form id="signupForm" style="display:none;">
-        <div class="form-group">
-            <label for="signupEmail">Email</label>
-            <input type="email" id="signupEmail" placeholder="tu@email.com" required>
-        </div>
-        <div class="form-group">
-            <label for="signupPassword">Password (min 6 caratteri)</label>
-            <input type="password" id="signupPassword" placeholder="••••••••" required minlength="6">
-        </div>
-        <button type="submit" class="btn btn-success">Registrati</button>
-        <div class="auth-toggle">
-            Hai già un account? <a onclick="showLogin()">Accedi</a>
-        </div>
-        <div class="error" id="signupError"></div>
-    </form>
-</div>
-
-<!-- ===== APP ===== -->
-<div class="container app-content" id="appContent">
-    <h1>🧹 Inventario Pulizie</h1>
-
-    <!-- User info -->
-    <div class="user-info">
-        <span class="email" id="userEmail">utente@email.com</span>
-        <button class="btn btn-danger" onclick="logout()" style="width:auto;padding:6px 16px;font-size:0.85rem;">🚪 Esci</button>
-    </div>
-
-    <!-- Statistiche -->
-    <div class="stats" id="stats">
-        <div class="stat-card">
-            <h3>Totale</h3>
-            <div class="number" id="totalProducts">0</div>
-        </div>
-        <div class="stat-card">
-            <h3>Stock Basso</h3>
-            <div class="number" id="lowStock">0</div>
-        </div>
-        <div class="stat-card">
-            <h3>Depositi</h3>
-            <div class="number" id="totalDeposits">0</div>
-        </div>
-        <div class="stat-card">
-            <h3>Categorie</h3>
-            <div class="number" id="totalCategories">0</div>
-        </div>
-    </div>
-
-    <!-- Gestione Categorie -->
-    <div class="category-management">
-        <div class="category-management-header">
-            <h3>📂 Gestione Categorie</h3>
-        </div>
-        <div class="category-list" id="categoryList">
-            <span style="color:#95a5a6;font-size:0.9rem;">Caricamento...</span>
-        </div>
-        <div class="add-category-form">
-            <input type="text" id="newCategoryInput" placeholder="Nuova categoria..." maxlength="30">
-            <button class="btn btn-success" onclick="addCategory()">➕ Aggiungi</button>
-        </div>
-    </div>
-
-    <!-- Form aggiunta prodotto -->
-    <div class="form-section">
-        <form id="productForm">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="productName">Nome Prodotto *</label>
-                    <input type="text" id="productName" placeholder="es. Sgrassatore" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="productCategory">Categoria</label>
-                    <select id="productCategory"></select>
-                </div>
-                <div class="form-group">
-                    <label for="productQuantity">Quantità *</label>
-                    <input type="number" id="productQuantity" placeholder="0" min="0" required inputmode="numeric">
-                </div>
-                <div class="form-group">
-                    <label for="productDeposit">Deposito *</label>
-                    <input type="text" id="productDeposit" placeholder="es. Deposito A" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="productLocation">Posizione *</label>
-                    <input type="text" id="productLocation" placeholder="es. Scaffale 3, Ripiano 2" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">➕ Aggiungi Prodotto</button>
-                </div>
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <h3>Totale</h3>
+                <div class="number" id="totalProducts">0</div>
             </div>
-        </form>
-    </div>
+            <div class="stat-card">
+                <h3>Stock Basso</h3>
+                <div class="number" id="lowStock">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Depositi</h3>
+                <div class="number" id="totalDeposits">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Categorie</h3>
+                <div class="number" id="totalCategories">0</div>
+            </div>
+        </div>
 
-    <!-- Filtri e ricerca -->
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="🔍 Cerca prodotto, deposito o posizione...">
-        <div class="filter-group">
-            <select id="filterCategory">
-                <option value="">Tutte le categorie</option>
-            </select>
-            <select id="filterDeposit">
-                <option value="">Tutti i depositi</option>
-            </select>
-            <button class="btn btn-warning" onclick="clearFilters()">Reset</button>
+        <div class="category-management">
+            <div class="category-management-header">
+                <h3>📂 Gestione Categorie</h3>
+            </div>
+            <div class="category-list" id="categoryList"></div>
+            <div class="add-category-form">
+                <input type="text" id="newCategoryInput" placeholder="Nuova categoria..." maxlength="30">
+                <button class="btn btn-success" onclick="addCategory()">➕ Aggiungi</button>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <form id="productForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="productName">Nome Prodotto *</label>
+                        <input type="text" id="productName" placeholder="es. Sgrassatore" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Categoria</label>
+                        <select id="productCategory"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productQuantity">Quantità *</label>
+                        <input type="number" id="productQuantity" placeholder="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDeposit">Deposito *</label>
+                        <input type="text" id="productDeposit" placeholder="es. Deposito A" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productLocation">Posizione *</label>
+                        <input type="text" id="productLocation" placeholder="es. Scaffale 3, Ripiano 2" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">➕ Aggiungi Prodotto</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Cerca prodotto, deposito o posizione...">
+            <div class="filter-group">
+                <select id="filterCategory"><option value="">Tutte le categorie</option></select>
+                <select id="filterDeposit"><option value="">Tutti i depositi</option></select>
+                <button class="btn btn-warning" onclick="clearFilters()">Reset</button>
+            </div>
+        </div>
+
+        <div class="product-list" id="productList">
+            <div class="empty-state">Nessun prodotto in inventario. Aggiungi il primo!</div>
         </div>
     </div>
 
-    <!-- LISTA PRODOTTI -->
-    <div class="product-list" id="productList">
-        <div class="empty-state">Caricamento prodotti...</div>
-    </div>
-</div>
-
-<!-- ===== MODALI ===== -->
-<!-- Modifica Prodotto -->
-<div class="modal-overlay" id="editModal">
-    <div class="modal">
-        <div class="modal-header">
-            <h2>✏️ Modifica Prodotto</h2>
-            <button class="modal-close" onclick="closeEditModal()">&times;</button>
+    <!-- Modal Modifica Prodotto -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>✏️ Modifica Prodotto</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editProductId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="editName">Nome Prodotto *</label>
+                        <input type="text" id="editName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCategory">Categoria</label>
+                        <select id="editCategory"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editQuantity">Quantità *</label>
+                        <input type="number" id="editQuantity" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDeposit">Deposito *</label>
+                        <input type="text" id="editDeposit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLocation">Posizione *</label>
+                        <input type="text" id="editLocation" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()" style="background:#95a5a6;color:white;">Annulla</button>
+                    <button type="submit" class="btn btn-primary">💾 Salva Modifiche</button>
+                </div>
+            </form>
         </div>
-        <form id="editForm">
-            <input type="hidden" id="editProductId">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="editName">Nome Prodotto *</label>
-                    <input type="text" id="editName" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="editCategory">Categoria</label>
-                    <select id="editCategory"></select>
-                </div>
-                <div class="form-group">
-                    <label for="editQuantity">Quantità *</label>
-                    <input type="number" id="editQuantity" min="0" required inputmode="numeric">
-                </div>
-                <div class="form-group">
-                    <label for="editDeposit">Deposito *</label>
-                    <input type="text" id="editDeposit" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="editLocation">Posizione *</label>
-                    <input type="text" id="editLocation" required autocomplete="off">
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Annulla</button>
-                <button type="submit" class="btn btn-primary">💾 Salva Modifiche</button>
-            </div>
-        </form>
     </div>
-</div>
 
-<!-- Modifica Categoria -->
-<div class="modal-overlay" id="editCategoryModal">
-    <div class="modal">
-        <div class="modal-header">
-            <h2>✏️ Modifica Categoria</h2>
-            <button class="modal-close" onclick="closeEditCategoryModal()">&times;</button>
-        </div>
-        <form id="editCategoryForm">
-            <input type="hidden" id="editCategoryOldName">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="editCategoryNewName">Nuovo nome categoria *</label>
-                    <input type="text" id="editCategoryNewName" required autocomplete="off" maxlength="30">
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeEditCategoryModal()">Annulla</button>
-                <button type="submit" class="btn btn-primary">💾 Salva</button>
-            </div>
-        </form>
-    </div>
-</div>
+    <script>
+        // ===== DATI =====
+        let products = [];
+        let categories = ['Detergente', 'Sgrassatore', 'Disinfettante', 'Detersivo', 'Lucida', 'Altro'];
+        let nextId = 1;
 
-<script>
-// ============================================
-// CONFIGURAZIONE SUPABASE - INSERISCI I TUOI DATI!
-// ============================================
-const SUPABASE_URL = 'https://TUO_PROGETTO.supabase.co';  // <- SOSTITUISCI!
-const SUPABASE_ANON_KEY = 'TUA_CHIAVE_ANON';              // <- SOSTITUISCI!
-
-// ============================================
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// ===== STATO LOCALE =====
-let products = [];
-let categories = [];
-let currentUser = null;
-
-// ===== AUTH =====
-async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-        currentUser = session.user;
-        showApp();
-        await loadCategories();
-        await loadProducts();
-    } else {
-        showLogin();
-    }
-}
-
-async function login(email, password) {
-    try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email, password
-        });
-        if (error) throw error;
-        currentUser = data.user;
-        showApp();
-        await loadCategories();
-        await loadProducts();
-        document.getElementById('loginError').textContent = '';
-    } catch (err) {
-        document.getElementById('loginError').textContent = err.message;
-    }
-}
-
-async function signup(email, password) {
-    try {
-        const { data, error } = await supabase.auth.signUp({
-            email, password
-        });
-        if (error) throw error;
-        if (data.user) {
-            alert('Registrazione completata! Ora puoi accedere.');
-            showLogin();
-        }
-        document.getElementById('signupError').textContent = '';
-    } catch (err) {
-        document.getElementById('signupError').textContent = err.message;
-    }
-}
-
-async function logout() {
-    await supabase.auth.signOut();
-    currentUser = null;
-    products = [];
-    categories = [];
-    showLogin();
-}
-
-function showLogin() {
-    document.getElementById('loginContainer').classList.remove('hidden');
-    document.getElementById('appContent').classList.remove('visible');
-    document.getElementById('loginForm').style.display = 'block';
-    document.getElementById('signupForm').style.display = 'none';
-    document.getElementById('loginError').textContent = '';
-}
-
-function showSignup() {
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('signupForm').style.display = 'block';
-    document.getElementById('loginError').textContent = '';
-    document.getElementById('signupError').textContent = '';
-}
-
-function showApp() {
-    document.getElementById('loginContainer').classList.add('hidden');
-    document.getElementById('appContent').classList.add('visible');
-    document.getElementById('userEmail').textContent = currentUser?.email || 'Utente';
-}
-
-// ===== CRUD PRODOTTI (con Supabase) =====
-async function loadProducts() {
-    try {
-        const { data, error } = await supabase
-            .from('products')
-            .select('*')
-            .order('id', { ascending: true });
-        
-        if (error) throw error;
-        products = data || [];
-        render();
-    } catch (err) {
-        console.error('Errore caricamento prodotti:', err);
-        products = [];
-        render();
-    }
-}
-
-async function addProductToDB(name, category, quantity, deposit, location) {
-    try {
-        const { data, error } = await supabase
-            .from('products')
-            .insert([{
-                name: name.trim(),
-                category: category,
-                quantity: parseInt(quantity) || 0,
-                deposit: deposit.trim(),
-                location: location.trim(),
-                user_id: currentUser.id
-            }])
-            .select();
-        
-        if (error) throw error;
-        if (data) {
-            products.push(data[0]);
-            render();
-        }
-        return true;
-    } catch (err) {
-        alert('Errore: ' + err.message);
-        return false;
-    }
-}
-
-async function updateProductInDB(id, name, category, quantity, deposit, location) {
-    try {
-        const { error } = await supabase
-            .from('products')
-            .update({
-                name: name.trim(),
-                category: category,
-                quantity: parseInt(quantity) || 0,
-                deposit: deposit.trim(),
-                location: location.trim()
-            })
-            .eq('id', id)
-            .eq('user_id', currentUser.id);
-        
-        if (error) throw error;
-        
-        // Aggiorna locale
-        const product = products.find(p => p.id === id);
-        if (product) {
-            product.name = name.trim();
-            product.category = category;
-            product.quantity = parseInt(quantity) || 0;
-            product.deposit = deposit.trim();
-            product.location = location.trim();
-            render();
-        }
-        return true;
-    } catch (err) {
-        alert('Errore: ' + err.message);
-        return false;
-    }
-}
-
-async function deleteProductFromDB(id) {
-    if (!confirm('Eliminare questo prodotto?')) return false;
-    
-    try {
-        const { error } = await supabase
-            .from('products')
-            .delete()
-            .eq('id', id)
-            .eq('user_id', currentUser.id);
-        
-        if (error) throw error;
-        products = products.filter(p => p.id !== id);
-        render();
-        return true;
-    } catch (err) {
-        alert('Errore: ' + err.message);
-        return false;
-    }
-}
-
-async function adjustQuantityInDB(id, delta) {
-    const product = products.find(p => p.id === id);
-    if (!product) return;
-    
-    const newQty = product.quantity + delta;
-    if (newQty < 0) {
-        alert('La quantità non può essere negativa!');
-        return;
-    }
-    
-    try {
-        const { error } = await supabase
-            .from('products')
-            .update({ quantity: newQty })
-            .eq('id', id)
-            .eq('user_id', currentUser.id);
-        
-        if (error) throw error;
-        product.quantity = newQty;
-        render();
-    } catch (err) {
-        alert('Errore: ' + err.message);
-    }
-}
-
-// ===== CRUD CATEGORIE (con Supabase) =====
-async function loadCategories() {
-    try {
-        const { data, error } = await supabase
-            .from('categories')
-            .select('*')
-            .order('name');
-        
-        if (error) throw error;
-        
-        // Assicura che le categorie predefinite ci siano sempre
-        const defaultCats = ['Detergente', 'Sgrassatore', 'Disinfettante', 'Detersivo', 'Lucida', 'Altro'];
-        const existingNames = data.map(c => c.name);
-        
-        // Se mancano categorie predefinite, le inseriamo
-        for (const cat of defaultCats) {
-            if (!existingNames.includes(cat)) {
-                await supabase
-                    .from('categories')
-                    .insert([{ name: cat, user_id: currentUser.id }]);
+        // ===== FUNZIONI =====
+        function loadData() {
+            const saved = localStorage.getItem('inventoryData');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    products = data.products || [];
+                    nextId = data.nextId || 1;
+                    if (data.categories) categories = data.categories;
+                } catch(e) {
+                    products = [];
+                    nextId = 1;
+                }
             }
+            // Assicura categorie predefinite
+            const defaults = ['Detergente', 'Sgrassatore', 'Disinfettante', 'Detersivo', 'Lucida', 'Altro'];
+            defaults.forEach(c => { if (!categories.includes(c)) categories.push(c); });
+            saveData();
         }
-        
-        // Ricarica per avere tutto
-        const { data: freshData } = await supabase
-            .from('categories')
-            .select('*')
-            .order('name');
-        
-        categories = freshData || [];
-        updateAllDropdowns();
-        renderCategories();
-        render();
-    } catch (err) {
-        console.error('Errore caricamento categorie:', err);
-        categories = [];
-    }
-}
 
-async function addCategoryToDB(name) {
-    name = name.trim();
-    if (!name) {
-        alert('Inserisci un nome per la categoria');
-        return false;
-    }
-    
-    if (categories.some(c => c.name === name)) {
-        alert('Questa categoria esiste già!');
-        return false;
-    }
-    
-    try {
-        const { data, error } = await supabase
-            .from('categories')
-            .insert([{ name: name, user_id: currentUser.id }])
-            .select();
-        
-        if (error) throw error;
-        if (data) {
-            categories.push(data[0]);
+        function saveData() {
+            localStorage.setItem('inventoryData', JSON.stringify({
+                products, nextId, categories
+            }));
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                'Detergente': '#3498db',
+                'Sgrassatore': '#e67e22',
+                'Disinfettante': '#27ae60',
+                'Detersivo': '#9b59b6',
+                'Lucida': '#f1c40f',
+                'Altro': '#95a5a6'
+            };
+            if (colors[category]) return colors[category];
+            let hash = 0;
+            for (let i = 0; i < category.length; i++) {
+                hash = category.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return `hsl(${Math.abs(hash) % 360}, 70%, 50%)`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ===== RENDER =====
+        function render() {
+            renderProducts();
+            updateStats();
+            updateDepositFilter();
+            saveData();
+        }
+
+        function renderProducts() {
+            const list = document.getElementById('productList');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const catFilter = document.getElementById('filterCategory').value;
+            const depFilter = document.getElementById('filterDeposit').value;
+
+            let filtered = products.filter(p => {
+                const matchSearch = p.name.toLowerCase().includes(search) ||
+                                  p.deposit.toLowerCase().includes(search) ||
+                                  p.location.toLowerCase().includes(search);
+                const matchCat = !catFilter || p.category === catFilter;
+                const matchDep = !depFilter || p.deposit === depFilter;
+                return matchSearch && matchCat && matchDep;
+            });
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="empty-state">${products.length === 0 ? 'Nessun prodotto. Aggiungi il primo!' : 'Nessun prodotto trovato'}</div>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map(p => {
+                const qtyClass = p.quantity <= 5 ? 'low' : (p.quantity <= 15 ? 'medium' : 'high');
+                const qtyEmoji = p.quantity <= 5 ? '⚠️' : (p.quantity <= 15 ? '📦' : '✅');
+                const color = getCategoryColor(p.category);
+                
+                return `
+                    <div class="product-card" style="border-left-color:${color}" onclick="openEditModal(${p.id})">
+                        <div class="product-card-header">
+                            <span class="product-name">${escapeHtml(p.name)}</span>
+                            <span class="product-category" style="background:${color}22;color:${color}">${escapeHtml(p.category)}</span>
+                        </div>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="label">Quantità</span>
+                                <span class="product-quantity-badge ${qtyClass}">${p.quantity} ${qtyEmoji}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Deposito</span>
+                                <span class="value">${escapeHtml(p.deposit)}</span>
+                            </div>
+                            <div class="detail-item" style="grid-column:1/-1;">
+                                <span class="label">Posizione</span>
+                                <span class="value">${escapeHtml(p.location)}</span>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-success" onclick="event.stopPropagation(); adjustQuantity(${p.id}, 1)">+1</button>
+                            <button class="btn btn-warning" onclick="event.stopPropagation(); adjustQuantity(${p.id}, -1)">-1</button>
+                            <button class="btn btn-danger" onclick="event.stopPropagation(); deleteProduct(${p.id})">🗑️</button>
+                        </div>
+                        <div class="product-edit-hint">👆 Tocca la scheda per modificare</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderCategories() {
+            const list = document.getElementById('categoryList');
+            if (!categories || categories.length === 0) {
+                list.innerHTML = '<span style="color:#95a5a6;">Nessuna categoria</span>';
+                return;
+            }
+            list.innerHTML = categories.map(cat => {
+                const color = getCategoryColor(cat);
+                const used = products.filter(p => p.category === cat).length;
+                return `
+                    <span class="category-tag">
+                        <span class="category-color" style="background:${color}"></span>
+                        ${escapeHtml(cat)}
+                        <span style="font-size:0.65rem;color:#95a5a6;">(${used})</span>
+                        <span class="category-actions">
+                            <button onclick="event.stopPropagation(); openEditCategoryModal('${escapeHtml(cat)}')">✏️</button>
+                            <button onclick="event.stopPropagation(); deleteCategory('${escapeHtml(cat)}')">🗑️</button>
+                        </span>
+                    </span>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('totalProducts').textContent = products.length;
+            document.getElementById('lowStock').textContent = products.filter(p => p.quantity <= 5).length;
+            document.getElementById('totalDeposits').textContent = new Set(products.map(p => p.deposit)).size;
+            document.getElementById('totalCategories').textContent = categories.length;
+        }
+
+        function updateDepositFilter() {
+            const select = document.getElementById('filterDeposit');
+            const val = select.value;
+            const deposits = [...new Set(products.map(p => p.deposit))].sort();
+            select.innerHTML = '<option value="">Tutti i depositi</option>' +
+                deposits.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+            select.value = val;
+        }
+
+        function updateAllDropdowns() {
+            ['productCategory', 'editCategory', 'filterCategory'].forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                const val = sel.value;
+                const isFilter = id === 'filterCategory';
+                sel.innerHTML = (isFilter ? '<option value="">Tutte le categorie</option>' : '') +
+                    categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+                if (categories.includes(val)) sel.value = val;
+            });
+        }
+
+        // ===== CRUD PRODOTTI =====
+        function addProduct(name, cat, qty, dep, loc) {
+            products.push({
+                id: nextId++,
+                name: name.trim(),
+                category: cat,
+                quantity: parseInt(qty) || 0,
+                deposit: dep.trim(),
+                location: loc.trim()
+            });
+            render();
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('Eliminare questo prodotto?')) return;
+            products = products.filter(p => p.id !== id);
+            render();
+        }
+
+        function adjustQuantity(id, delta) {
+            const p = products.find(p => p.id === id);
+            if (!p) return;
+            if (p.quantity + delta < 0) {
+                alert('La quantità non può essere negativa!');
+                return;
+            }
+            p.quantity += delta;
+            render();
+        }
+
+        // ===== CRUD CATEGORIE =====
+        function addCategory() {
+            const input = document.getElementById('newCategoryInput');
+            const name = input.value.trim();
+            if (!name) { alert('Inserisci un nome'); return; }
+            if (categories.includes(name)) { alert('Esiste già!'); return; }
+            categories.push(name);
+            input.value = '';
+            updateAllDropdowns();
+            renderCategories();
+            saveData();
+        }
+
+        function deleteCategory(name) {
+            const used = products.filter(p => p.category === name).length;
+            if (used > 0) {
+                if (!confirm(`"${name}" usata da ${used} prodotto/i. Eliminare? Verranno spostati in "Altro".`)) return;
+                products.forEach(p => { if (p.category === name) p.category = 'Altro'; });
+            } else {
+                if (!confirm(`Eliminare "${name}"?`)) return;
+            }
+            const defaults = ['Detergente', 'Sgrassatore', 'Disinfettante', 'Detersivo', 'Lucida', 'Altro'];
+            if (defaults.includes(name) && categories.filter(c => defaults.includes(c)).length <= 1) {
+                alert('Non puoi eliminare l\'ultima categoria predefinita.');
+                return;
+            }
+            categories = categories.filter(c => c !== name);
             updateAllDropdowns();
             renderCategories();
             render();
-            document.getElementById('newCategoryInput').value = '';
+            saveData();
         }
-        return true;
-    } catch (err) {
-        alert('Errore: ' + err.message);
-        return false;
-    }
-}
 
-async function deleteCategoryFromDB(name) {
-    const usedCount = products.filter(p => p.category === name).length;
-    if (usedCount > 0) {
-        if (!confirm(`La categoria "${name}" è usata da ${usedCount} prodotto/i. Eliminarla comunque? I prodotti verranno spostati in "Altro".`)) {
-            return false;
+        function openEditCategoryModal(name) {
+            document.getElementById('editCategoryOldName').value = name;
+            document.getElementById('editCategoryNewName').value = name;
+            document.getElementById('editCategoryModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-        // Sposta i prodotti in "Altro"
-        for (const p of products) {
-            if (p.category === name) {
-                await updateProductInDB(p.id, p.name, 'Altro', p.quantity, p.deposit, p.location);
+
+        function closeEditCategoryModal() {
+            document.getElementById('editCategoryModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function saveCategoryEdit() {
+            const oldName = document.getElementById('editCategoryOldName').value;
+            const newName = document.getElementById('editCategoryNewName').value.trim();
+            if (!newName) { alert('Inserisci un nome'); return; }
+            if (newName === oldName) { closeEditCategoryModal(); return; }
+            if (categories.includes(newName)) { alert('Esiste già!'); return; }
+            products.forEach(p => { if (p.category === oldName) p.category = newName; });
+            categories = categories.map(c => c === oldName ? newName : c);
+            updateAllDropdowns();
+            renderCategories();
+            render();
+            saveData();
+            closeEditCategoryModal();
+        }
+
+        // ===== MODAL PRODOTTO =====
+        function openEditModal(id) {
+            const p = products.find(p => p.id === id);
+            if (!p) return;
+            document.getElementById('editProductId').value = p.id;
+            document.getElementById('editName').value = p.name;
+            document.getElementById('editCategory').value = p.category;
+            document.getElementById('editQuantity').value = p.quantity;
+            document.getElementById('editDeposit').value = p.deposit;
+            document.getElementById('editLocation').value = p.location;
+            document.getElementById('editModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function saveProductEdit() {
+            const id = parseInt(document.getElementById('editProductId').value);
+            const name = document.getElementById('editName').value.trim();
+            const cat = document.getElementById('editCategory').value;
+            const qty = parseInt(document.getElementById('editQuantity').value);
+            const dep = document.getElementById('editDeposit').value.trim();
+            const loc = document.getElementById('editLocation').value.trim();
+            if (!name || !dep || !loc) { alert('Compila tutti i campi'); return; }
+            if (qty < 0) { alert('Quantità non negativa'); return; }
+            const p = products.find(p => p.id === id);
+            if (p) {
+                p.name = name; p.category = cat; p.quantity = qty; p.deposit = dep; p.location = loc;
+                render();
+                saveData();
             }
+            closeEditModal();
         }
-    } else {
-        if (!confirm(`Eliminare la categoria "${name}"?`)) {
-            return false;
+
+        // ===== FILTRI =====
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('filterDeposit').value = '';
+            render();
         }
-    }
-    
-    // Non permettere di eliminare l'ultima categoria predefinita
-    const defaultCats = ['Detergente', 'Sgrassatore', 'Disinfettante', 'Detersivo', 'Lucida', 'Altro'];
-    if (defaultCats.includes(name) && categories.filter(c => defaultCats.includes(c.name)).length <= 1) {
-        alert('Non puoi eliminare l\'ultima categoria predefinita.');
-        return false;
-    }
-    
-    try {
-        const { error } = await supabase
-            .from('categories')
-            .delete()
-            .eq('name', name)
-            .eq('user_id', currentUser.id);
-        
-        if (error) throw error;
-        categories = categories.filter(c => c.name !== name);
+
+        // ===== EVENTI =====
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('productName').value.trim();
+            const cat = document.getElementById('productCategory').value;
+            const qty = document.getElementById('productQuantity').value;
+            const dep = document.getElementById('productDeposit').value.trim();
+            const loc = document.getElementById('productLocation').value.trim();
+            if (!name || !dep || !loc) { alert('Compila tutti i campi obbligatori'); return; }
+            if (parseInt(qty) < 0) { alert('Quantità non negativa'); return; }
+            addProduct(name, cat, qty, dep, loc);
+            this.reset();
+            document.getElementById('productName').focus();
+        });
+
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveProductEdit();
+        });
+
+        document.getElementById('editCategoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveCategoryEdit();
+        });
+
+        document.getElementById('searchInput').addEventListener('input', render);
+        document.getElementById('filterCategory').addEventListener('change', render);
+        document.getElementById('filterDeposit').addEventListener('change', render);
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditModal();
+        });
+        document.getElementById('editCategoryModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditCategoryModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { closeEditModal(); closeEditCategoryModal(); }
+        });
+
+        document.getElementById('newCategoryInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); addCategory(); }
+        });
+
+        // ===== INIT =====
+        loadData();
         updateAllDropdowns();
         renderCategories();
         render();
-        return true;
-    } catch (err) {
-        alert('Errore: ' + err.message);
-        return false;
-    }
-}
 
-async function updateCategoryInDB(oldName, newName) {
-    newName = newName.trim();
-    if (!newName) {
-        alert('Inserisci un nome valido');
-        return false;
-    }
-    if (newName === oldName) return true;
-    if (categories.some(c => c.name === newName)) {
-        alert('Questa categoria esiste già!');
-        return false;
-    }
-    
-    try {
-        // Aggiorna la categoria
-        const { error } = await supabase
-            .from('categories')
-            .update({ name: newName })
-            .eq('name', oldName)
-            .eq('user_id', currentUser.id);
-        
-        if (error) throw error;
-        
-        // Aggiorna i prodotti che usano questa categoria
-        for (const p of products) {
-            if (p.category === oldName) {
-                await updateProductInDB(p.id, p.name, newName, p.quantity, p.deposit, p.location);
-            }
+        // Prodotti di esempio
+        if (products.length === 0) {
+            addProduct('Sgrassatore Universale', 'Sgrassatore', 12, 'Deposito A', 'Scaffale 1, Ripiano 2');
+            addProduct('Disinfettante Spray', 'Disinfettante', 8, 'Deposito A', 'Scaffale 2, Ripiano 1');
+            addProduct('Detersivo Pavimenti', 'Detersivo', 3, 'Deposito B', 'Scaffale 1, Ripiano 3');
+            addProduct('Lucida Mobili', 'Lucida', 20, 'Deposito B', 'Scaffale 3, Ripiano 1');
+            addProduct('Detergente Vetri', 'Detergente', 6, 'Deposito A', 'Scaffale 2, Ripiano 2');
         }
-        
-        // Aggiorna lista locale
-        const cat = categories.find(c => c.name === oldName);
-        if (cat) cat.name = newName;
-        
-        updateAllDropdowns();
-        renderCategories();
-        render();
-        return true;
-    } catch (err) {
-        alert('Errore: ' + err.message);
-        return false;
-    }
-}
+    </script>
 
-// ===== RENDER =====
-function render() {
-    renderProducts();
-    updateStats();
-    updateDepositFilter();
-}
-
-function renderProducts() {
-    const list = document.getElementById('productList');
-    const search = document.getElementById('searchInput').value.toLowerCase();
-    const categoryFilter = document.getElementById('filterCategory').value;
-    const depositFilter = document.getElementById('filterDeposit').value;
-
-    let filtered = products.filter(p => {
-        const matchSearch = p.name.toLowerCase().includes(search) ||
-                          p.deposit.toLowerCase().includes(search) ||
-                          p.location.toLowerCase().includes(search);
-        const matchCategory = !categoryFilter || p.category === categoryFilter;
-        const matchDeposit = !depositFilter || p.deposit === depositFilter;
-        return matchSearch && matchCategory && matchDeposit;
-    });
-
-    if (filtered.length === 0) {
-        list.innerHTML = `<div class="empty-state">${products.length === 0 ? 'Nessun prodotto in inventario. Aggiungi il primo!' : 'Nessun prodotto trovato con questi filtri'}</div>`;
-        return;
-    }
-
-    list.innerHTML = filtered.map(p => {
-        const qtyClass = p.quantity <= 5 ? 'low' : (p.quantity <= 15 ? 'medium' : 'high');
-        const qtyEmoji = p.quantity <= 5 ? '⚠️' : (p.quantity <= 15 ? '📦' : '✅');
-        const color = getCategoryColor(p.category);
-        
-        return `
-            <div class="product-card" style="border-left-color:${color}" onclick="openEditModal(${p.id})">
-                <div class="product-card-header">
-                    <span class="product-name">${escapeHtml(p.name)}</span>
-                    <span class="product-category" style="background:${color}22;color:${color}">${escapeHtml(p.category)}</span>
-                </div>
-                <div class="product-details">
-                    <div class="detail-item">
-                        <span class="label">Quantità</span>
-                        <span class="product-quantity-badge ${qtyClass}">${p.quantity} ${qtyEmoji}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="label">Deposito</span>
-                        <span class="value">${escapeHtml(p.deposit)}</span>
-                    </div>
-                    <div class="detail-item" style="grid-column: 1 / -1;">
-                        <span class="label">Posizione</span>
-                        <span class="value">${escapeHtml(p.location)}</span>
-                    </div>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-success" onclick="event.stopPropagation(); adjustQuantityInDB(${p.id}, 1)">+1</button>
-                    <button class="btn btn-warning" onclick="event.stopPropagation(); adjustQuantityInDB(${p.id}, -1)">-1</button>
-                    <button class="btn btn-danger" onclick="event.stopPropagation(); deleteProductFromDB(${p.id})">🗑️</button>
-                </div>
-                <div class="product-edit-hint">👆 Tocca la scheda per modificare</div>
+    <!-- Modal Modifica Categoria -->
+    <div class="modal-overlay" id="editCategoryModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>✏️ Modifica Categoria</h2>
+                <button class="modal-close" onclick="closeEditCategoryModal()">&times;</button>
             </div>
-        `;
-    }).join('');
-}
-
-function renderCategories() {
-    const list = document.getElementById('categoryList');
-    if (!categories || categories.length === 0) {
-        list.innerHTML = '<span style="color:#95a5a6;font-size:0.9rem;">Nessuna categoria</span>';
-        return;
-    }
-
-    list.innerHTML = categories.map(cat => {
-        const color = getCategoryColor(cat.name);
-        const usedCount = products.filter(p => p.category === cat.name).length;
-        return `
-            <span class="category-tag">
-                <span class="category-color" style="background:${color}"></span>
-                ${escapeHtml(cat.name)}
-                <span style="font-size:0.65rem;color:#95a5a6;font-weight:400;">(${usedCount})</span>
-                <span class="category-actions">
-                    <button class="edit-cat" onclick="event.stopPropagation(); openEditCategoryModal('${escapeHtml(cat.name)}')" title="Modifica">✏️</button>
-                    <button class="delete-cat" onclick="event.stopPropagation(); deleteCategoryFromDB('${escapeHtml(cat.name)}')" title="Elimina">🗑️</button>
-                </span>
-            </span>
-        `;
-    }).join('');
-}
-
-function updateStats() {
-    document.getElementById('totalProducts').textContent = products.length;
-    const low = products.filter(p => p.quantity <= 5).length;
-    document.getElementById('lowStock').textContent = low;
-    const deposits = new Set(products.map(p => p.deposit));
-    document.getElementById('totalDeposits').textContent = deposits.size;
-    document.getElementById('totalCategories').textContent = categories.length;
-}
-
-function updateDepositFilter() {
-    const select = document.getElementById('filterDeposit');
-    const currentVal = select.value;
-    const deposits = [...new Set(products.map(p => p.deposit))].sort();
-    select.innerHTML = '<option value="">Tutti i depositi</option>' +
-        deposits.map(d => `<option value="${d}">${escapeHtml(d)}</option>`).join('');
-    select.value = currentVal;
-}
-
-function updateAllDropdowns() {
-    updateDropdown('productCategory');
-    updateDropdown('editCategory');
-    updateDropdown('filterCategory');
-}
-
-function updateDropdown(dropdownId) {
-    const select = document.getElementById(dropdownId);
-    if (!select) return;
-    
-    const currentVal = select.value;
-    select.innerHTML = categories.map(c => 
-        `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`
-    ).join('');
-    
-    if (categories.some(c => c.name === currentVal)) {
-        select.value = currentVal;
-    }
-}
-
-function getCategoryColor(category) {
-    const colors = {
-        'Detergente': '#3498db',
-        'Sgrassatore': '#e67e22',
-        'Disinfettante': '#27ae60',
-        'Detersivo': '#9b59b6',
-        'Lucida': '#f1c40f',
-        'Altro': '#95a5a6'
-    };
-    if (colors[category]) return colors[category];
-    
-    let hash = 0;
-    for (let i = 0; i < category.length; i++) {
-        hash = category.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const hue = Math.abs(hash) % 360;
-    return `hsl(${hue}, 70%, 50%)`;
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function clearFilters() {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('filterCategory').value = '';
-    document.getElementById('filterDeposit').value = '';
-    render();
-}
-
-// ===== MODAL PRODOTTO =====
-function openEditModal(id) {
-    const product = products.find(p => p.id === id);
-    if (!product) return;
-
-    document.getElementById('editProductId').value = product.id;
-    document.getElementById('editName').value = product.name;
-    document.getElementById('editCategory').value = product.category;
-    document.getElementById('editQuantity').value = product.quantity;
-    document.getElementById('editDeposit').value = product.deposit;
-    document.getElementById('editLocation').value = product.location;
-
-    document.getElementById('editModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeEditModal() {
-    document.getElementById('editModal').classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// ===== MODAL CATEGORIA =====
-function openEditCategoryModal(name) {
-    document.getElementById('editCategoryOldName').value = name;
-    document.getElementById('editCategoryNewName').value = name;
-    document.getElementById('editCategoryModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeEditCategoryModal() {
-    document.getElementById('editCategoryModal').classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// ===== EVENTI =====
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    login(email, password);
-});
-
-document.getElementById('signupForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    signup(email, password);
-});
-
-document.getElementById('productForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const name = document.getElementById('productName').value.trim();
-    const category = document.getElementById('productCategory').value;
-    const quantity = document.getElementById('productQuantity').value;
-    const deposit = document.getElementById('productDeposit').value.trim();
-    const location = document.getElementById('productLocation').value.trim();
-
-    if (!name || !deposit || !location) {
-        alert('Compila tutti i campi obbligatori (*)');
-        return;
-    }
-
-    if (parseInt(quantity) < 0) {
-        alert('La quantità non può essere negativa');
-        return;
-    }
-
-    await addProductToDB(name, category, quantity, deposit, location);
-    this.reset();
-    document.getElementById('productName').focus();
-});
-
-document.getElementById('editForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const id = parseInt(document.getElementById('editProductId').value);
-    const name = document.getElementById('editName').value.trim();
-    const category = document.getElementById('editCategory').value;
-    const quantity = parseInt(document.getElementById('editQuantity').value);
-    const deposit = document.getElementById('editDeposit').value.trim();
-    const location = document.getElementById('editLocation').value.trim();
-
-    if (!name || !deposit || !location) {
-        alert('Compila tutti i campi obbligatori (*)');
-        return;
-    }
-
-    if (quantity < 0) {
-        alert('La quantità non può essere negativa');
-        return;
-    }
-
-    await updateProductInDB(id, name, category, quantity, deposit, location);
-    closeEditModal();
-});
-
-document.getElementById('editCategoryForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const oldName = document.getElementById('editCategoryOldName').value;
-    const newName = document.getElementById('editCategoryNewName').value.trim();
-    
-    await updateCategoryInDB(oldName, newName);
-    closeEditCategoryModal();
-});
-
-document.getElementById('searchInput').addEventListener('input', render);
-document.getElementById('filterCategory').addEventListener('change', render);
-document.getElementById('filterDeposit').addEventListener('change', render);
-
-// Chiudi modali
-document.getElementById('editModal').addEventListener('click', function(e) {
-    if (e.target === this) closeEditModal();
-});
-document.getElementById('editCategoryModal').addEventListener('click', function(e) {
-    if (e.target === this) closeEditCategoryModal();
-});
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeEditModal();
-        closeEditCategoryModal();
-    }
-});
-
-document.getElementById('newCategoryInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        addCategoryToDB(this.value);
-    }
-});
-
-// ===== AVVIA APP =====
-checkAuth();
-</script>
+            <form id="editCategoryForm">
+                <input type="hidden" id="editCategoryOldName">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="editCategoryNewName">Nuovo nome categoria *</label>
+                        <input type="text" id="editCategoryNewName" required maxlength="30">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditCategoryModal()" style="background:#95a5a6;color:white;">Annulla</button>
+                    <button type="submit" class="btn btn-primary">💾 Salva</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
