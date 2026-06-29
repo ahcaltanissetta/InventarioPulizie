@@ -1327,23 +1327,26 @@
 // ===== MODIFICA MOVIMENTO =====
 async function updateMovement(movementId, type, quantity, reason, note) {
     try {
-        console.log('🔄 Inizio modifica movimento:', movementId);
-        console.log('📊 Nuovi valori ricevuti:', { type, quantity, reason, note });
+        console.log('🔄 Inizio modifica movimento ID:', movementId);
+        console.log('📊 Nuovi valori:', { type, quantity, reason, note });
         
-        // Trova il movimento originale
-        var movement = movements.find(function(m) { return m.movement_id === movementId; });
+        // Cerca il movimento PER ID NUMERICO
+        var movement = movements.find(function(m) { 
+            return m.id === parseInt(movementId) || String(m.id) === String(movementId);
+        });
+        
+        if (!movement) {
+            movement = movements.find(function(m) { 
+                return m.movement_id === movementId;
+            });
+        }
+        
         if (!movement) {
             alert('❌ Movimento non trovato!');
             return false;
         }
 
-        console.log('📊 Movimento originale:', {
-            id: movement.id,
-            movement_id: movement.movement_id,
-            type: movement.type,
-            quantity: movement.quantity,
-            reason: movement.reason
-        });
+        console.log('📊 Movimento trovato - ID numerico:', movement.id);
 
         var product = products.find(function(p) { return p.id === movement.product_id; });
         if (!product) {
@@ -1359,14 +1362,12 @@ async function updateMovement(movementId, type, quantity, reason, note) {
         console.log('📊 Vecchio movimento:', { oldType, oldQty });
         console.log('📊 Nuovo movimento:', { newType, newQty });
 
-        // Se la quantità non è cambiata e il tipo non è cambiato, esci
         if (oldQty === newQty && oldType === newType) {
-            console.log('⚠️ Nessuna modifica rilevata, esco.');
-            alert('Nessuna modifica rilevata.');
+            alert('⚠️ Nessuna modifica rilevata.');
             return false;
         }
 
-        // Calcola la differenza per la quantità del prodotto
+        // Calcola la differenza
         var quantityDiff = 0;
         if (oldType === 'carico' && newType === 'carico') {
             quantityDiff = newQty - oldQty;
@@ -1386,55 +1387,50 @@ async function updateMovement(movementId, type, quantity, reason, note) {
             return false;
         }
 
-        // 1. Aggiorna il movimento nel database
+        // USA L'ID NUMERICO PER L'AGGIORNAMENTO
         var updateData = {
             type: newType,
             quantity: newQty,
             reason: reason,
             note: note || ''
         };
-        console.log('📤 Invio aggiornamento a Supabase:', updateData);
+        console.log('📤 Invio aggiornamento con ID numerico:', movement.id);
 
         var result = await _supabase
             .from('inventory_movements')
             .update(updateData)
-            .eq('movement_id', movementId);
+            .eq('id', movement.id);
 
         if (result.error) {
-            console.error('❌ Errore aggiornamento movimento:', result.error);
+            console.error('❌ Errore:', result.error);
             throw result.error;
         }
         console.log('✅ Movimento aggiornato nel database');
 
-        // 2. Aggiorna la quantità del prodotto
+        // Aggiorna il prodotto
         await _supabase
             .from('products')
             .update({ quantity: newProductQty })
             .eq('id', product.id)
             .eq('user_id', currentUser.id);
-        console.log('✅ Prodotto aggiornato nel database');
+        console.log('✅ Prodotto aggiornato');
 
-        // 3. Aggiorna i dati locali
+        // Aggiorna dati locali
         product.quantity = newProductQty;
         movement.quantity = newQty;
         movement.type = newType;
         movement.reason = reason;
         movement.note = note || '';
 
-        // 4. RICARICA I DATI DAL DATABASE
+        // Ricarica e renderizza
         await loadProducts();
         await loadMovements();
-        console.log('✅ Dati ricaricati. Movimenti totali:', movements.length);
-
-        // 5. RENDERIZZA
         render();
         console.log('✅ Render completato');
 
-        // 6. CHIUDI I MODALI
+        // Chiudi e riapri
         closeEditMovementModal();
         closeDetailModal();
-
-        // 7. RIAVRE IL DETTAGLIO
         setTimeout(function() {
             openDetailModal(product.id);
         }, 400);
@@ -1442,7 +1438,7 @@ async function updateMovement(movementId, type, quantity, reason, note) {
         return true;
 
     } catch (err) {
-        console.error('❌ Errore in updateMovement:', err);
+        console.error('❌ Errore:', err);
         alert('Errore: ' + err.message);
         return false;
     }
@@ -1452,11 +1448,25 @@ async function deleteMovement(movementId) {
     if (!confirm('Eliminare questo movimento?')) return false;
 
     try {
-        var movement = movements.find(function(m) { return m.movement_id === movementId; });
+        console.log('🗑️ Eliminazione movimento:', movementId);
+        
+        // Cerca il movimento PER ID NUMERICO
+        var movement = movements.find(function(m) { 
+            return m.id === parseInt(movementId) || String(m.id) === String(movementId);
+        });
+        
+        if (!movement) {
+            movement = movements.find(function(m) { 
+                return m.movement_id === movementId;
+            });
+        }
+        
         if (!movement) {
             alert('Movimento non trovato!');
             return false;
         }
+
+        console.log('📊 Movimento trovato - ID numerico:', movement.id);
 
         var product = products.find(function(p) { return p.id === movement.product_id; });
         if (!product) {
@@ -1472,43 +1482,35 @@ async function deleteMovement(movementId) {
         }
 
         if (newProductQty < 0) {
-            alert('⚠️ Quantità insufficiente! Eliminazione non possibile.');
+            alert('⚠️ Quantità insufficiente!');
             return false;
         }
 
-        // Elimina il movimento
+        // ELIMINA USANDO L'ID NUMERICO
         var result = await _supabase
             .from('inventory_movements')
             .delete()
-            .eq('movement_id', movementId)
-            .eq('user_id', currentUser.id);
+            .eq('id', movement.id);
 
         if (result.error) throw result.error;
+        console.log('✅ Movimento eliminato');
 
-        // Aggiorna la quantità del prodotto
         await _supabase
             .from('products')
             .update({ quantity: newProductQty })
             .eq('id', product.id)
             .eq('user_id', currentUser.id);
 
-        // Aggiorna i dati locali
         product.quantity = newProductQty;
-        
-        // RICARICA I MOVIMENTI DAL DATABASE
+        await loadProducts();
         await loadMovements();
-        
-        // RENDERIZZA LA LISTA PRODOTTI
         render();
         
-        // CHIUDI IL DETTAGLIO ATTUALE
         closeDetailModal();
-        
-        // RIAVRE IL DETTAGLIO DOPO UN BREVE DELAY
         setTimeout(function() {
             openDetailModal(product.id);
         }, 400);
-        
+
         return true;
 
     } catch (err) {
@@ -1766,16 +1768,26 @@ function refreshDetail(productId) {
         // ===== MODAL MODIFICA MOVIMENTO =====
 function openEditMovementModal(movementId) {
     console.log('✏️ Apertura modifica movimento ID:', movementId);
-    console.log('📊 Movimenti disponibili:', movements.length);
     
+    // Cerca il movimento PER ID NUMERICO
     var movement = movements.find(function(m) { 
-        return m.movement_id === movementId; 
+        return m.id === parseInt(movementId) || String(m.id) === String(movementId);
     });
     
     if (!movement) {
-        alert('❌ Movimento non trovato! ID: ' + movementId);
+        // Se non trovato, prova a cercare per movement_id (UUID)
+        movement = movements.find(function(m) { 
+            return m.movement_id === movementId;
+        });
+    }
+    
+    if (!movement) {
+        alert('❌ Movimento non trovato!');
+        console.error('Movimenti disponibili:', movements);
         return;
     }
+
+    console.log('📊 Movimento trovato - ID numerico:', movement.id);
 
     var product = products.find(function(p) { return p.id === movement.product_id; });
     if (!product) {
@@ -1783,18 +1795,12 @@ function openEditMovementModal(movementId) {
         return;
     }
 
-    // IMPOSTA I VALORI NEL FORM
-    document.getElementById('editMovementId').value = movementId;
+    // USA L'ID NUMERICO (NON l'UUID)
+    document.getElementById('editMovementId').value = movement.id;
     document.getElementById('editMovementProductName').value = product.name + ' (disponibili: ' + product.quantity + ')';
     document.getElementById('editMovementQuantity').value = movement.quantity;
     document.getElementById('editMovementReason').value = movement.reason;
     document.getElementById('editMovementNote').value = movement.note || '';
-
-    console.log('📊 Valori impostati nel form:', {
-        quantity: movement.quantity,
-        reason: movement.reason,
-        note: movement.note
-    });
 
     setEditMovementType(movement.type);
 
