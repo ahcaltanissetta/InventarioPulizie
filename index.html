@@ -1845,37 +1845,49 @@ function openEditMovementModal(movementId) {
             }
         }
 
-        async function updateProduct(id, name, cat, qty, dep, loc, note) {
-            try {
-                var result = await _supabase
-                    .from('products')
-                    .update({
-                        name: name.trim(),
-                        category: cat,
-                        quantity: parseInt(qty) || 0,
-                        deposit: dep.trim(),
-                        location: loc.trim(),
-                        note: note ? note.trim() : ''
-                    })
-                    .eq('id', id)
-                    .eq('user_id', currentUser.id);
-                if (result.error) throw result.error;
-                var p = products.find(function(x) { return x.id === id; });
-                if (p) {
-                    p.name = name.trim();
-                    p.category = cat;
-                    p.quantity = parseInt(qty) || 0;
-                    p.deposit = dep.trim();
-                    p.location = loc.trim();
-                    p.note = note ? note.trim() : '';
-                    render();
-                }
-                return true;
-            } catch (err) {
-                alert('Errore: ' + err.message);
-                return false;
-            }
+  async function updateProduct(id, name, cat, qty, dep, loc, note) {
+    try {
+        var updateData = {
+            name: name.trim(),
+            category: cat,
+            quantity: parseInt(qty) || 0,
+            deposit: dep.trim(),
+            location: loc.trim(),
+            user_id: currentUser.id
+        };
+        
+        // Aggiungi note solo se la colonna esiste
+        if (note !== undefined) {
+            updateData.note = note ? note.trim() : '';
         }
+
+        var result = await _supabase
+            .from('products')
+            .update(updateData)
+            .eq('id', id)
+            .eq('user_id', currentUser.id);
+            
+        if (result.error) throw result.error;
+        
+        var p = products.find(function(x) { return x.id === id; });
+        if (p) {
+            p.name = name.trim();
+            p.category = cat;
+            p.quantity = parseInt(qty) || 0;
+            p.deposit = dep.trim();
+            p.location = loc.trim();
+            if (note !== undefined) {
+                p.note = note ? note.trim() : '';
+            }
+            render();
+        }
+        return true;
+        
+    } catch (err) {
+        alert('Errore: ' + err.message);
+        return false;
+    }
+}
 
         async function deleteProduct(id) {
             if (!confirm('Eliminare questo prodotto e tutti i suoi movimenti?')) return;
